@@ -1,0 +1,64 @@
+Templates:
+    base.html - base page with navbar and footer
+    dishes/dashboard.html - landing page displaying dishes
+    dishes/dish.html - new dish form/update dish form
+    dishes/ratings-form.html - snippet containing a ratings form for a dish 
+    dishes/dish-details.html - dish details page
+    dishes/favorites.html - list of favorite dishes
+    dishes/categories - list categories
+    dishes/category.html - category details
+    dishes/card-dish.html
+    card_dish - cards for displaying dishes
+    card_category - card for displaying categories
+    chip_category - chip for displaying lists of categories on recipe page
+    chip_user - chip for displaying list of users on recipe page
+
+chef (user) routes
+- chefs - display all users
+- chefs/<int:user_id> - user details
+- chefs/registration - 
+- chefs/login - 
+- chefs/<int:user_id>/update
+- chefs/<int:user_id>/follow
+- chefs/<int:user_id>/un_follow
+
+Profile page
+- recipes favorited
+- recipes made ("I made it")
+- reviews
+- personal recipes (created)
+- followers
+- following
+
+Favicon 
+add these links to the head section of your base.html page
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+Color Scheme
+- red #FD363E
+- gray #E7E1DD
+- Mustard #D9A758
+- pink #EC727B
+- brown #8C421E
+
+Backlog (Possible Enhancements): 
+Nutrition Info for each recipe (NutritionInfo class)
+
+Idea- Search by Ingredient (form to add one or more ingredients to include or exclude  in recipe)
+
+Idea- password strength meter 
+- zxcvbn library for password validation
+    include this in a script tag in the template: https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js
+    CSS Tricks: Password Strength `meter` https://css-tricks.com/password-strength-meter/
+
+- Password Strength Indicator using jQuery
+   https://www.geeksforgeeks.org/password-strength-indicator-using-jquery/
+
+- jQuery Plugin For Password Strength Checker and Indicator - Password-Strength
+    https://www.jqueryscript.net/form/jQuery-Plugin-For-Password-Strength-Checker-and-Indicator-Password-Strength.html
+    https://www.jqueryscript.net/demo/jQuery-Plugin-For-Password-Strength-Checker-and-Indicator-Password-Strength
+
+- other ideas: https://www.jqueryscript.net/blog/best-password-strength-checker.html
