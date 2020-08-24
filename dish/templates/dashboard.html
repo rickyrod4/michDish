@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    {% load static %}
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="header">
+            <h1>**Mich Dish**</h1>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown button <!-- Insert User Profile Picture -->
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">Home</a>
+                  <a class="dropdown-item" href="#">My Profile</a>
+                  <a class="dropdown-item" href="#">Edit Accout</a>
+                  <a class="dropdown-item" href="">Logout</a>
+                </div>
+              </div>
+              <div id="main-content">
+                <div class="row" id="newPost">
+                  <div class="title">
+                    <h4>Create A New Recipe</h4>
+
+                  </div>
+                  <div>
+                    <form action="" class="form-group" >
+
+                    </form>
+                  </div>
+
+
+
+                </div>
+                <div class="row" id="allPost">
+                  <div class="title"> 
+                    <h4>All Post</h4>
+
+                  </div>
+                  <!-- All Users Post [For Loop Starts] -->
+                  <div>
+                    <h6><a href="">Recipe Title</a></h6> <!-- Take To Recipe Page -->
+                  </div>
+                  <div class="row">
+                    <div id="picture">
+
+                    </div>
+                    <div id="recipe">
+
+                    </div>
+                  </div>
+                  <div id="commentLike">
+                    <a href="">Like</a>
+                    <!-- Display Form for Users To Type Comments-->
+                    <a href="">Comment</a> 
+
+
+                  </div>
+
+                  <!-- End For Loop -->
+
+                </div>
+              </div>
+        </div>
+
+    </div>
+</body>
+</html>
