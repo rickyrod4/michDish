@@ -17,10 +17,11 @@
             <h1>**Mich Dish**</h1>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown button <!-- Insert User Profile Picture -->
+                  {{ user.first_name }} {{ user.last_name }} <!-- Insert User Profile Picture -->
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" href="#">Home</a>
+                  <a class="dropdown-item" href="#">Categories</a>
                   <a class="dropdown-item" href="#">My Profile</a>
                   <a class="dropdown-item" href="#">Edit Accout</a>
                   <a class="dropdown-item" href="">Logout</a>
@@ -29,12 +30,30 @@
               <div id="main-content">
                 <div class="row" id="newPost">
                   <div class="title">
-                    <h4>Create A New Recipe</h4>
-
+                    <h4>Create A New Recipe</h4> 
                   </div>
-                  <div>
-                    <form action="" class="form-group" >
-
+                  <div id="form">
+                    <!-- Form For Creating a New Recipe -->
+                    <form action="/get_dish" method="POST">
+                      {% csrf_token %}
+                        <div class="form-group">
+                          <label for="">Dish Name</label>
+                          <input type="text" class="form-control" id="" placeholder="Enter Your Dish">
+                        </div>
+                        <div class="form-group">
+                          <label for="">Ingredients</label> <!-- What would be the best way to capture all ingredients ??? Another Form ??? (Double Check Bootstrap Options) -->
+                          <input type="text" class="form-control" id="" placeholder="Enter The Ingredients">
+                        </div>
+                        <div class="form-group">
+                          <label for="">Prep Time (In Minutes)</label>
+                          <input type="text" class="form-control" id="">
+                        </div>
+                        <div class="form-group">
+                          <label for="">Cook Time (In Minutes)</label>
+                          <input type="text" class="form-control" id="">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                   </div>
 
