@@ -44,6 +44,7 @@ class Dish(models.Model):
     recipe = models.TextField
     description = models.TextField
     instructions = models.TextField
+    ingredients = models.TextField
     prep = models.IntegerField
     cook = models.IntegerField
     servings = models.IntegerField
@@ -60,7 +61,7 @@ class DishForm(ModelForm):
     class Meta:
         model = Dish
         fields = ['title', 'recipe', 'description', 'instructions',
-        'prep', 'cook', 'servings', 'profile_pic']
+        'ingredients', 'prep', 'cook', 'servings', 'profile_pic']
 
 class Comment(models.Model):
     comment = models.CharField(max_length=255)
@@ -79,7 +80,7 @@ class UserProfile(models.Model):
         blank=True,
         null=True,
         )
-    bio = models.ForeignKey(User, related_name='user')
+    bio = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
     location = models.CharField(max_length=50)
     birthday = models.DateField(blank=True, null=True)
 
