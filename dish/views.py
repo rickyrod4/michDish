@@ -1,37 +1,40 @@
-from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect, get_object_or_404
 # from login_app.models import User
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .models import *
 from django.contrib import messages
 from django.db.models import Avg, F, Q
 from django.core.paginator import Paginator
 import math
-from zxcvbn import zxcvbn
 
 DISHES_PER_PAGE = 6
 
 
 # Create your views here.
 def index(request):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
+    # if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
+    #     return redirect('accounts/login')
     
-    dishes = Dish.objects.all() #.order_by('date')
+    # dishes = Dish.objects.all() #.order_by('date')
 
-    paginator = Paginator(dishes, DISHES_PER_PAGE) # NUMBER OF dishes per page TO DISPLAY
-    page_number = request.GET.get('page') or 1
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(dishes, DISHES_PER_PAGE) # NUMBER OF dishes per page TO DISPLAY
+    # page_number = request.GET.get('page') or 1
+    # page_obj = paginator.get_page(page_number)
 
     context = {
-        #'user': User.objects.get(id=request.session['user_id']),
-        'page_obj': page_obj,
-        'current_page': page_number,
+        'foo': 'bar',
     }
-    return render(request, 'dishes/dashboard.html', context)
+    # context = {
+    #     #'user': User.objects.get(id=request.session['user_id']),
+    #     'page_obj': page_obj,
+    #     'current_page': page_number,
+    # }
+    return render(request, 'dish/dashboard.html', context)
 
 def get_dish(request):
     if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
+        return redirect('accounts/login')
 
     user = User.objects.get(id=request.session['user_id'])
     dish = Dish(creator=user) #create a new Dish object with the current user as the creator
@@ -280,16 +283,16 @@ def get_category(request):
     return render(request,'dishes/category.html', context)
 
 
-def update_category(request):
+def update_category(request, category_id):
     pass
 
-def add_category(request):
+def add_category(request, category_id):
     pass
 
-def remove_category(request):
+def remove_category(request, category_id):
     pass
 
-def category_dishes(request):
+def category_dishes(request, category_id):
     pass
 
 def search_dishes(request):
@@ -317,4 +320,6 @@ def search_dishes(request):
         'search_query': query,
     }
     return render(request, 'dishes/card-dish.html', context)
-    
+
+def made_it(request, dish_id):
+        pass   
