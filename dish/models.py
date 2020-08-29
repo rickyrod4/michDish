@@ -34,6 +34,16 @@ class UserForm(ModelForm):
         fields =['first_name', 'last_name', 'profile_pic', 
         'email', 'password']
 
+class Category(models.Model):
+    name = models.CharField(max_length=20)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+
 def dish_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'dish_{0}/{1}'.format(instance.id, filename)
@@ -119,13 +129,3 @@ class RatingForm(ModelForm):
     class Meta:
         model = Rating
         fields = ['dish', 'user', 'rating', 'review']
-
-class Category(models.Model):
-    name = models.CharField(max_length=20)
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
-
-class CategoryForm(ModelForm):
-    class Meta:
-        model = Category
-        fields = ['name']
