@@ -1,0 +1,3 @@
+{% extends 'dish/base.html' %}
+
+path('categories/<int:category_id>', views.category_dishes, name="category_dishes")
