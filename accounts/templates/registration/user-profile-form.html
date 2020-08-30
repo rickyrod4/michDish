@@ -1,0 +1,31 @@
+{% extends 'dish/base.html' %}
+
+{% block content %}
+<h2>User Profile Form</h2>
+<form action="{% url 'accounts:update_user_profile' profiled_user_id=profiled_user.id %}" enctype="multipart/form-data"
+    method="POST" role="form" novalidate>
+    {% csrf_token %}
+
+    {% for field in form.visible_fields %}
+    <div class="fieldWrapper form-group" data-id="{{ field.name }}"
+        aria-required="{% if field.field.required %}true{% else %}false{% endif %}">
+        {% for error in field.errors %}
+        <p class="alert alert-danger"><strong>{{ error }}</strong></p>
+        {% endfor %}
+
+        {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
+        {{ field }}
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    {% for field in form.hidden_fields %}
+    {{ field }}
+    {% endfor %}
+
+    <input type="submit" class="btn btn-primary mb-2" value="Submit" />
+</form>
+
+{% endblock %}

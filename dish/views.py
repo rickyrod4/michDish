@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirec
 # from login_app.models import User
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from .models import *
 from django.contrib import messages
 from django.db.models import Avg, F, Q
@@ -13,10 +14,7 @@ DISHES_PER_PAGE = 6
 
 # Create your views here.
 def index(request):
-    # if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-    #     return redirect('accounts/login')
-    
-    # dishes = Dish.objects.all() #.order_by('date')
+    dishes = Dish.objects.all() #.order_by('date')
 
     # paginator = Paginator(dishes, DISHES_PER_PAGE) # NUMBER OF dishes per page TO DISPLAY
     # page_number = request.GET.get('page') or 1
@@ -24,19 +22,18 @@ def index(request):
 
     context = {
         'foo': 'bar',
-    }
-    # context = {
-    #     #'user': User.objects.get(id=request.session['user_id']),
+        'user': request.user,
+        'dishes': dishes,
     #     'page_obj': page_obj,
     #     'current_page': page_number,
-    # }
+    }
     return render(request, 'dish/dashboard.html', context)
 
+@login_required
 def get_dish(request):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('accounts/login')
+    # New Dish Form
 
-    user = User.objects.get(id=request.session['user_id'])
+    user = request.user #User.objects.get(id=request.session['user_id'])
     dish = Dish(creator=user) #create a new Dish object with the current user as the creator
 
     #POST request ==> save new course
@@ -72,18 +69,18 @@ def get_dish(request):
     context = {
         'user': user,
         'form': form,
-        'action': 'new',
+        'action': 'new',  #use the 'action' key in the template to determine if the form's action should be new or update
     }
     return render(request,'dishes/dish.html', context)
 
+@login_required
 def rate_dish(request, dish_id):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
+    # This view can be called via Ajax and returns only the ratings form
 
-    user = User.objects.get(id=request.session['user_id'])
+    user = request.user #User.objects.get(id=request.session['user_id'])
     dish = Dish.objects.get(id=dish_id)
 
-    print(f'Processing rating of dish {dish.title} by {user.full_name()}')
+    # print(f'Processing rating of dish {dish.title} by {user.full_name()}')
     if request.method == 'POST':
 
         rating = Rating(user=user, dish=dish)
@@ -96,31 +93,29 @@ def rate_dish(request, dish_id):
         return redirect(f'/dishes/{dish.id}')
     
     if hasattr(dish,'ratings'):
+        # if user has rated dish, don't let user rate it again
+        # get user's rating for this dish
         if dish.ratings.filter(user=user).count() > 0:
             user_has_rated_dish = True
             user_rating_this_dish = dish.ratings.filter(user=user).first()
-            form = None
+            form = None #don't return a form
 
         else:
             user_has_rated_dish = False
             user_rating_this_dish = None
 
+        #recalculate average ratings
         average_rating = Rating.objects.filter(dish=dish).aggregate(Avg('number_of_stars'))['number_of_stars__avg'] or 0
-        temp_avg = math.floor(average_rating)
-        temp_rating = Rating(user=user, dish=dish, number_of_stars = temp_avg)
-        average_rating_text = temp_rating.get_number_of_stars_display()
         all_ratings = dish.ratings.all()
 
     else:
         average_rating = 0
-        average_rating_text = ''
         all_ratings = None
 
     context = {
         'user': user,
         'dish': dish,
         'average_rating': average_rating,
-        'average_rating_text' : average_rating_text,
         'all_ratings': all_ratings,
         'user_has_rated_dish': user_has_rated_dish,
         'user_rating_this_dish': user_rating_this_dish,
@@ -129,11 +124,9 @@ def rate_dish(request, dish_id):
    
     return render(request, 'dishes/ratings-form.html', context)
 
+@login_required
 def update_dish(request, dish_id):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
-
-    user = User.objects.get(id=request.session['user_id'])
+    user = request.user #User.objects.get(id=request.session['user_id'])
     dish = Dish.objects.get(id=dish_id)
 
     if request.method == 'POST':
@@ -163,48 +156,48 @@ def update_dish(request, dish_id):
         'user': user,
         'form': form,
         'dish': dish,
-        'action': 'update',
+        'action': 'update',  #use the 'action' key in the template to determine if the form's action should be new or update
     }
     return render(request,'dishes/dish.html', context)
 
 def dish_details(request, dish_id):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
-
-    user = User.objects.get(id=request.session['user_id'])
+    # returns dish details page
+    # since the ratings form is on the dish details page, code handles rating logic as well
+ 
+    user = request.user # User.objects.get(id=request.session['user_id'])
     dish = Dish.objects.get(id=dish_id)
 
     if hasattr(dish,'ratings'):
 
+        # determine if this user has rated this dish before
         if dish.ratings.filter(user=user).count() > 0:
+            #user hsa rated dish; don't permit another rating (just don't return a form object)
             print(f"Ratings for {dish.title}: {dish.ratings.filter(user=user).count()}")
             user_has_rated_dish = True
             user_rating_this_dish = dish.ratings.filter(user=user).first()
             form = None
 
         else:
+            # user has not yet rated this dish
             user_has_rated_dish = False
             user_rating_this_dish = None
             form = RatingForm()
 
+        #get the oversall ratings for this dish
         average_rating = Rating.objects.filter(dish=dish).aggregate(Avg('number_of_stars'))['number_of_stars__avg'] or 0
-        temp_avg = math.floor(average_rating)
-        temp_rating = Rating(user=user, dish=dish, number_of_stars = temp_avg)
-        average_rating_text = temp_rating.get_number_of_stars_display()
         all_ratings = dish.ratings.all()
 
     else:
+        # dish has no ratings yet
         print(f"No ratings yet for {dish.title}.")
         form = RatingForm()
         average_rating = 0
-        average_rating_text = ''
         all_ratings = None
 
     context = {
         'user': user,
         'dish': dish,
         'average_rating': average_rating,
-        'average_rating_text': average_rating_text,
         'all_ratings': all_ratings,
         'user_has_rated_dish': user_has_rated_dish,
         'user_rating_this_dish': user_rating_this_dish,
@@ -212,22 +205,23 @@ def dish_details(request, dish_id):
     }
     return render(request, 'dishes/dish-details.html', context)
 
+@login_required
 def favorites(request):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
-    user = User.objects.get(id=request.session['user_id'])
+    # returns user's  favorite dishes
+
+    user = request.user #User.objects.get(id=request.session['user_id'])
     context = {
         'user': user,
         'dish': user.favorite_dishes.all().order_by('date'),
     }
     return render(request, 'dishes/favorites.html', context)
 
+@login_required
 def favorite(request, dish_id):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
+    #user has favorited dish
 
     dish = Dish.objects.get(id=dish_id)
-    user = User.objects.get(id=request.session['user_id'])
+    user = request.user #User.objects.get(id=request.session['user_id'])
     if user not in dish.favorited_by.all():
         dish.favorited_by.add(user)
         dish.save()   #IS THIS NECESSARY?
@@ -236,23 +230,24 @@ def favorite(request, dish_id):
     # return the user to the same page they were on when they favorited the course
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
 def unfavorite(request, dish_id):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
+    # user has un-favorited the dish
 
     dish = Dish.objects.get(id=dish_id)
-    user = User.objects.get(id=request.session['user_id'])
+    user = request.user #User.objects.get(id=request.session['user_id'])
     if user in dish.favorited_by.all():
         dish.favorited_by.remove(user)
         dish.save()   #IS THIS NECESSARY?
     
+    # user could be on any numbmer of pages when they push the favorite button
+    # return the user to the same page they were on when they favorited the course
     return redirect(request.META.get('HTTP_REFERER'))
 
 def categories(request):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
-
-    user = User.objects.get(id=request.session['user_id'])
+    # displays a page with list of categories
+    # user can click on a category link and see all dishes of that category each linked to dishes for  
+    user = request.user #User.objects.get(id=request.session['user_id'])
     categories = Category.objects.all()
     context = {
         'user': user,
@@ -260,17 +255,16 @@ def categories(request):
     }
     return render(request, 'dishes/categories.html', context)
 
+@staff_member_required
 def get_category(request):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
 
-    user = User.objects.get(id=request.session['user_id'])
+    user = request.user #User.objects.get(id=request.session['user_id'])
 
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/dishes/categories')
+            return redirect('/dish/categories')
     
     else: #this is a GET request so create a blank form
         form = CategoryForm()
@@ -278,45 +272,65 @@ def get_category(request):
     context = {
         'user': user,
         'form': form,
-        'action': 'new',
+        'action': 'new', #use the 'action' key in the template to determine if the form's action should be new or update
     }
-    return render(request,'dishes/category.html', context)
+    return render(request,'dish/category.html', context)
 
-
+@staff_member_required
 def update_category(request, category_id):
-    pass
 
-def add_category(request, category_id):
-    pass
+    user = request.user #User.objects.get(id=request.session['user_id'])
+    category = Category.objects.get(id=category_id)
 
-def remove_category(request, category_id):
-    pass
+    if request.method == 'POST':
+
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save()
+            return redirect(f'/category/{category_id}')
+    
+    else: #this is a GET request so create an update form
+        form = CategoryForm(instance=category)
+    
+    context = {
+        'user': user,
+        'form': form,
+        'category': category,
+        'action': 'update',  #use the 'action' key in the template to determine if the form's action should be new or update
+    }
+    return render(request,'dish/category.html', context)
 
 def category_dishes(request, category_id):
-    pass
+    # returns dishes for a particular category
+    user = request.user #User.objects.get(id=request.session['user_id'])
+    category = Category.objects.get(id=category_id)
+    context = {
+        'user': user,
+        'category' : category,
+        'courses': category.dishes.all().order_by('rating__rating'),
+    }
+    return render(request, 'classes/interest-classes.html', context)
 
 def search_dishes(request):
-    if (not 'user_id' in request.session.keys()) or (request.session['user_id'] == ''):
-        return redirect('/')
-
-    query = request.GET.get('q', '')
+    query = request.GET.get('q', '') #get the search criterial from the querystring (or '' if it doesn't exist)
     print("SEARCHING FOR: ", query)
     if query:
-        queryset = (Q(title__icontains = query)) | (Q(description__icontains=query))
+        queryset = (Q(title__icontains = query)) | (Q(description__icontains=query)) | (Q(ingredients__icontains=query)) | (Q(instructions__icontains=query))
+        # Q(poster__username__icontains = query) | Q(categories__name__icontains = query)
         dishes = Dish.objects.filter(queryset).distinct().order_by('date')
         print("DISHES: ", dishes)
     else:
         dishes = Dish.objects.all().order_by('date')
 
-    paginator = Paginator(dishes, DISHSES_PER_PAGE) #show 9 dishes per page
-    page_number = request.GET.get('page') or 1
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(dishes, DISHSES_PER_PAGE) #show 9 dishes per page
+    # page_number = request.GET.get('page') or 1
+    # page_obj = paginator.get_page(page_number)
 
     context = {
-        'user': User.objects.get(id=request.session['user_id']),
-        'page_obj': page_obj,
-        'dishes': page_obj.object_list,
-        'current_page': page_number,
+        'user': request.user, #User.objects.get(id=request.session['user_id']),
+        # 'page_obj': page_obj,
+        'dishes': dishes, #page_obj.object_list,
+        # 'current_page': page_number,
         'search_query': query,
     }
     return render(request, 'dishes/card-dish.html', context)

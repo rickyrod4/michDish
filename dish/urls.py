@@ -17,8 +17,6 @@ category_patterns = [
     path('', views.categories, name="categories"),
     path('new', views.get_category, name="get_category"),
     path('<int:category_id>/update', views.update_category, name="update_category"),
-    path('<int:category_id>/add', views.add_category, name="add_category"),
-    path('<int:category_id>/remove', views.remove_category, name="remove_category"),
     path('<int:category_id>', views.category_dishes, name="category_dishes"),
 ]
 
