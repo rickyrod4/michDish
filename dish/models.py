@@ -5,35 +5,6 @@ from localflavor.us.models import USStateField
 # from django.utils import timezone
 from datetime import datetime, date
 
-class UserManager(models.Manager):
-    def basic_validator(self, postdata):
-        errors = {}
-        email_checker = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
-        if len(postdata['pw']) < 8:
-            errors['pw'] = "Your password must be at least 8 characters"
-        if len(postdata['fname']) < 2 or len(postdata['lname']) < 2:
-            errors['name'] = "Your name must be at least 2 characters"
-        if not email_checker.match(postdata['email']):
-            errors['email'] = 'Email must be valid'
-        if postdata['pw'] != postdata['confpw']:
-            errors['pw'] = 'Password and Confirm Password do not match'
-        return errors
-
-
-#class User(models.Model):
-    #first_name = models.CharField(max_length=50)
-    #last_name = models.CharField(max_length=50)
-    #email = models.CharField(max_length=50)
-    #password = models.CharField(max_length=50)
-    #created_at = models.DateField(auto_now_add=True)
-    #updated_at = models.DateField(auto_now=True)
-    #objects = UserManager()
-
-class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields =['first_name', 'last_name', 'profile_pic', 
-        'email', 'password']
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -52,11 +23,11 @@ def dish_directory_path(instance, filename):
     return 'dish_{0}/{1}'.format(instance.id, filename)
 class Dish(models.Model):
     title = models.CharField(max_length=255)
-    recipe = models.TextField()
-    description = models.TextField(blank=True)
-    ingredients = models.TextField()
-    prep_time = models.IntegerField()
-    cook_time = models.IntegerField()
+    recipe = models.TextField(help_text="Instructions for how to make the dish.")
+    description = models.TextField(blank=True, help_text="Describe the dish, its history and why you were inspired to make it.")
+    ingredients = models.TextField(help_text="Add each ingredient on a new line.")
+    prep_time = models.IntegerField(help_text="Prep time in minutes.")
+    cook_time = models.IntegerField(help_text="Cook time in minutes.")
     servings = models.IntegerField()
     profile_pic = models.ImageField(
         upload_to='course_directory_path', 
@@ -64,7 +35,7 @@ class Dish(models.Model):
         blank=True,
         null=True,
         )
-    categories = models.ManyToManyField(Category, related_name='dishes')
+    categories = models.ManyToManyField(Category, related_name='dishes', help_text="Select all categories that apply.")
     poster = models.ForeignKey(User, related_name='user_dishes', on_delete=models.CASCADE)
     user_likes = models.ManyToManyField(User, related_name='liked_dishes')
     created_at = models.DateField(auto_now_add=True)
@@ -80,19 +51,10 @@ class DishForm(ModelForm):
         'ingredients', 'prep_time', 'cook_time', 'servings', 'profile_pic', 'categories']
 
 
-def comment_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'comment_{0}/{1}'.format(instance.id, filename)
 class Comment(models.Model):
     comment = models.CharField(max_length=255)
     poster = models.ForeignKey(User, related_name='user_comments', on_delete=models.CASCADE)
     dish = models.ForeignKey(Dish, related_name='dish_comments', on_delete=models.CASCADE)
-    profile_pic = models.ImageField(
-        upload_to='course_directory_path', 
-        default= 'dishes/blank-dish.jpg',
-        blank=True,
-        null=True,
-        )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
@@ -103,7 +65,7 @@ class Comment(models.Model):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['comment', 'poster', 'dish']
+        fields = ['comment', 'profile_pic']
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -115,7 +77,7 @@ class UserProfile(models.Model):
         blank=True,
         null=True,
         )
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True, help_text="Tell us about yourself, chef!")
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     location = models.CharField(max_length=50)
     birthday = models.DateField(blank=True, null=True)
@@ -136,6 +98,11 @@ class Rating(models.Model):
     user = models.ForeignKey(User, related_name='ratings', on_delete=models.CASCADE)
     rating = models.IntegerField()
     review = models.CharField(max_length=255)
+    profile_pic = models.ImageField(
+        upload_to='dish_directory_path', 
+        blank=True,
+        null=True,
+    )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
@@ -146,4 +113,4 @@ class Rating(models.Model):
 class RatingForm(ModelForm):
     class Meta:
         model = Rating
-        fields = ['dish', 'user', 'rating', 'review']
+        fields = ['rating', 'review']
