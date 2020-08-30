@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from localflavor.us.models import USStateField
+#from localflavor.us.models import USStateField
 # from django.utils import timezone
 from datetime import datetime, date
 
@@ -65,7 +65,7 @@ class Comment(models.Model):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['comment', 'profile_pic']
+        fields = ['comment']
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
