@@ -1,5 +1,4 @@
 """michdish URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
 Examples:
@@ -17,6 +16,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('dish/', include('dish.urls')),
+    # path('accounts/', include('accounts.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('dish.urls')),
+    path('registration/', include('accounts.urls')),
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
 ]
