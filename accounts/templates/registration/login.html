@@ -1,0 +1,69 @@
+{% extends 'dish/base.html' %}
+{% load static %}
+
+{% block greeting %}{% endblock greeting %}
+
+{% block favorites %}
+{% endblock favorites %}
+
+{% block profile %}
+<a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
+{% endblock profile %}
+
+{% block login %}
+{% endblock login %}        
+
+{% block content %}
+<div class="container login">
+    <div class="header">
+        <img src="{% static 'dish/icon_reverse.png' %}" width="40px" alt="Mich Dish logo">
+        <h1>Login</h1>
+    </div>
+    <div class="content">
+        {% if form.errors %}
+        <p class="error">Your username and password don't match. Please try again.</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
+
+        <form  method="post" action="{% url 'login' %}" role="form" novalidate>
+        {% csrf_token %}
+
+        {% for field in form.visible_fields %}
+        <div class="fieldWrapper form-group"
+            data-id="{{ field.name }}" 
+            aria-required="{% if field.field.required %}true{% else %}false{% endif %}">
+            {% for error in field.errors %}
+            <p class="alert alert-danger"><strong>{{ error }}</strong></p>
+            {% endfor %}
+            
+            {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
+            {{ field }}
+            {% if field.help_text %}
+            <small id="help_for_{{ field.name }}" class="form-text text-muted">{{ field.help_text|safe }}</small>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-info mb-2" value="Login" />
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        </form>
+
+        {# Assumes you setup the password_reset view in your URLconf #}
+        <p class="d-flex justify-content-center"><a href="{% url 'password_reset' %}">Lost password?</a></p>        
+    </div>
+</div>
+{% endblock content %}

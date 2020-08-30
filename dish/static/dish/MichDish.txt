@@ -1,0 +1,37 @@
+Create an application that allows users to share fine dining recipes.
+Group members: 
+    - DeZavier Dewberry: Models, ModelForms
+    - Ricardo Rodriguez: Templates, Wireframes
+    - Shari Bradford: Routes, Views
+
+Github Repo: https://github.com/rickyrod4/michDish
+
+1. Display recipe "cards" in a grid on the home page
+    - recipe description
+    - photo
+    - user, number likes, recipe categories (e.g, dinner, breakfast, mexican, italian, cookies, main dishes, etc.)
+2. Allow the user to click on a card to see the recipe details
+3. Allow the user to search for recipes by title
+4. Login/Registration Required
+5. Allow users to rate and comment on recipes
+6. Recipe details
+    - show recipe details on a page
+    - include a button to "Add to Favorites"
+    - show details including title, description, ingredients, cooking instructions, categories
+    - display overall rating
+    - display the users who have rated and commented on the recipe (with links to their profiles)
+7. User Pages
+    - Allow the user to create a profile bio and profile pic
+    - Allow user to see the recipes they have contributed
+    - Allow the user to see the recipes they have rated or commented on
+    - Allow user to see recipes they have favorited
+
+
+Extras
+1. Allow the user to search for text appearing in any field, not just the recipe title
+2. Allow the user to search by contributor and categories
+3. Allow users to follow other users
+4. Allow social sharing of recipes (click on "share" button to share on twitter, FB, instagram, Pinterest, etc.)
+6. Allow recipe contributors to add multiple photos
+    - display all photos in a slider or gallery; 
+    - allow expand and autoplay slide show

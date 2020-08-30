@@ -1,0 +1,20 @@
+{% extends 'dish/base.html' %}
+
+{% block greeting %}{% endblock greeting %}
+
+{% block favorites %}
+{% endblock favorites %}
+
+{% block profile %}
+<a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
+{% endblock profile %}
+
+{% block login %}
+<a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+{% endblock login %}        
+
+{% block content %}
+<h1>{{ title }}</h1>
+<p>Thanks for visiting!</p>
+<p><a href="{% url 'login' %}">Login again</a></p>
+{% endblock content %}

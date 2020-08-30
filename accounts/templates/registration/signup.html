@@ -1,0 +1,53 @@
+{% extends 'dish/base.html' %}
+{% load static %}
+
+{% block greeting %}{% endblock greeting %}
+
+{% block favorites %}
+{% endblock favorites %}
+
+{% block profile %}
+{% endblock profile %}
+
+{% block login %}
+<a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+{% endblock login %}        
+
+{% block content %}
+<div class="container signup">
+    <div class="header">
+        <img src="{% static 'dish/icon_reverse.png' %}" width="40px" alt="Mich Dish logo">
+        <h1>Register</h1>
+    </div>
+    <div class="content">
+        <form action="{% url 'accounts:signup' %}" enctype="multipart/form-data" method="POST" role="form" novalidate>
+            {% csrf_token %}
+
+            {% for field in form.visible_fields %}
+            <div class="fieldWrapper form-group" data-id="{{ field.name }}"
+                aria-required="{% if field.field.required %}true{% else %}false{% endif %}">
+                
+                {% for error in field.errors %}
+                <p class="alert alert-danger"><strong>{{ error }}</strong></p>
+                {% endfor %}
+
+                {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
+                {{ field }}
+                {% if field.help_text %}
+                <small id="help_for_{{ field.name }}" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% for field in form.hidden_fields %}
+            {{ field }}
+            {% endfor %}
+
+            <div class="d-flex flex-column align-items-center">
+                <input type="submit" class="btn btn-info mb-2" value="Submit" />
+                <a href="{% url 'login' %}">Already have an account? Login.</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

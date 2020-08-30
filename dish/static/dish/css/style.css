@@ -1,0 +1,54 @@
+@import url(fonts.css);
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+    color: #333;
+    background: #fff;
+}
+
+.container.login,
+.container.signup {
+    width: 360px;
+    margin: 20px auto;
+    padding: 0;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+}
+
+.container.signup {
+    width: 500px;
+}
+
+.container.login .header,
+.container.signup .header {
+    padding: 15px;
+    background-color: #03989E;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18pt;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.container.login h1,
+.container.signup h1 {
+    padding-top: 10px;
+    margin-left: 10px;
+}
+.container.login .content,
+.container.signup .content {
+    padding: 15px;
+}
+
+.required, .error {
+    color:red;
+}
+
