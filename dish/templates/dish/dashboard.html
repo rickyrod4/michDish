@@ -1,62 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    {% load static %}
+<!--Get called by views.index -->
+<!-- **** Need to fix/clarify ****-->
 
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="header">
-            <h1>**Mich Dish**</h1>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{ user.first_name }} {{ user.last_name }} <!-- Insert User Profile Picture -->
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Home</a>
-                  <a class="dropdown-item" href="#">Categories</a>
-                  <a class="dropdown-item" href="#">My Profile</a>
-                  <a class="dropdown-item" href="#">Edit Accout</a>
-                  <a class="dropdown-item" href="">Logout</a>
-                </div>
-              </div>
-              <div id="main-content">
+{% extends 'dish/base.html' %}
+{% block content %} 
                 <div class="row" id="newPost">
                   <div class="title">
-                    <h4>Create A New Recipe</h4> 
+                    <h4><a href="/dish/new" class="btn btn-outline-primary">Create New Recipe</a></h4> 
                   </div>
-                  <div id="form">
-                    <!-- Form For Creating a New Recipe -->
-                    <form action="/get_dish" method="POST">
-                      {% csrf_token %}
-                        <div class="form-group">
-                          <label for="">Dish Name</label>
-                          <input type="text" class="form-control" id="" placeholder="Enter Your Dish">
-                        </div>
-                        <div class="form-group">
-                          <label for="">Ingredients</label> <!-- What would be the best way to capture all ingredients ??? Another Form ??? (Double Check Bootstrap Options) -->
-                          <input type="text" class="form-control" id="" placeholder="Enter The Ingredients">
-                        </div>
-                        <div class="form-group">
-                          <label for="">Prep Time (In Minutes)</label>
-                          <input type="text" class="form-control" id="">
-                        </div>
-                        <div class="form-group">
-                          <label for="">Cook Time (In Minutes)</label>
-                          <input type="text" class="form-control" id="">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                  </div>
-
 
 
                 </div>
@@ -66,31 +16,35 @@
 
                   </div>
                   <!-- All Users Post [For Loop Starts] -->
+                  {% for dish in dishes %}
                   <div>
-                    <h6><a href="">Recipe Title</a></h6> <!-- Take To Recipe Page -->
+                    <!-- ****need to add link to User Profile -->
+                    <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
                   </div>
                   <div class="row">
-                    <div id="picture">
-
+                    <div class= "col" id="picture">
+                      <div>
+                        <img src="{{ dish.profile_pic }}" alt="Dish Picture Here">
+                      </div>
+                      <div>
+                        <h5>Overall Rating: <!-- ****{{ dish.ratings.avg }} --></h5>
+                      </div>
+                      <div>
+                        <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
+                      </div>
                     </div>
-                    <div id="recipe">
-
+                    <div class="col" id="description">
+                      <p>{{ dish.description }}</p>
                     </div>
                   </div>
-                  <div id="commentLike">
-                    <a href="">Like</a>
+                  <div id="rate">
+                    <a href="">Rate: </a> <!-- ****Change to Django Form Radio 1-5 -->
                     <!-- Display Form for Users To Type Comments-->
-                    <a href="">Comment</a> 
-
-
+                    <a href="">Review</a> <!--****Django Form To input Review-->
                   </div>
 
                   <!-- End For Loop -->
+                  {% endfor %}
 
                 </div>
-              </div>
-        </div>
-
-    </div>
-</body>
-</html>
+{% end block%}
