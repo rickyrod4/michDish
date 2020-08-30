@@ -19,8 +19,9 @@ class CategoryForm(ModelForm):
         fields = ['name']
 
 def dish_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    # file will be uploaded to MEDIA_ROOT/dish_<id>/<filename>
     return 'dish_{0}/{1}'.format(instance.id, filename)
+
 class Dish(models.Model):
     title = models.CharField(max_length=255)
     recipe = models.TextField(help_text="Instructions for how to make the dish.")
@@ -30,7 +31,7 @@ class Dish(models.Model):
     cook_time = models.IntegerField(help_text="Cook time in minutes.")
     servings = models.IntegerField()
     profile_pic = models.ImageField(
-        upload_to='course_directory_path', 
+        upload_to='dish_directory_path', 
         default= 'dishes/blank-dish.jpg',
         blank=True,
         null=True,
@@ -49,7 +50,6 @@ class DishForm(ModelForm):
         model = Dish
         fields = ['title', 'recipe', 'description',
         'ingredients', 'prep_time', 'cook_time', 'servings', 'profile_pic', 'categories']
-
 
 class Comment(models.Model):
     comment = models.CharField(max_length=255)
