@@ -1,5 +1,4 @@
 """michdish URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
 Examples:
@@ -25,4 +24,8 @@ urlpatterns = [
     path('registration/', include('accounts.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
+]
+=======
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 691ee4cdefce3708b6d8ce013a23fb59d432eb5c

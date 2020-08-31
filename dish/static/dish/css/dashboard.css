@@ -1,0 +1,12 @@
+#title {
+    display: inline-block;
+    margin-left: 35%;
+}
+.post div {
+    display: inline-block;
+    margin-left: 50%;
+}
+.post {
+    outline: 1pt black dotted;
+    
+}

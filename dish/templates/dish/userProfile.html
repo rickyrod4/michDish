@@ -4,11 +4,16 @@
                 <div class="row" id="newPost">
                   <div class="col">
                         <div id="profilePic">
+                          <h4>Profile Picture Should go here</h4>
+                          <img src="{{ user.profile_pic }}" alt="User Profile Picture">
                           <!-- Display User Profile Image (if none Display Default Image) -->
                         </div>
                         <div id="userInfo">
                           <!-- Dispaly User Info (Name, Bio, Location, Avg. Rating) -->
-                          
+                          <h4>Name: {{ user.first_name }} {{ user.last_name }}</h4>
+                          <h4>Bio: <p>{{ user.bio }}</p> </h4>
+                          <h4>Location: {{ user.location }}</h4>
+                          <h4>Birthday: {{ user.birthday }}</h4>
                         </div>
                   </div>
                   <div class="col">
