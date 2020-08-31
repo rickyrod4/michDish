@@ -64,14 +64,14 @@ def get_dish(request):
             return redirect(f'/dish/{dish.id}')
     
     else: #this is a GET request so create a blank form
-        dish = DishForm(instance=dish)
+        form = DishForm(instance=dish)
     
     context = {
         'user': user,
         'form': form,
         'action': 'new',  #use the 'action' key in the template to determine if the form's action should be new or update
     }
-    return render(request,'dishes/dish.html', context)
+    return render(request,'dish/dish.html', context)
 
 @login_required
 def rate_dish(request, dish_id):
@@ -87,10 +87,10 @@ def rate_dish(request, dish_id):
         form = RatingForm(request.POST, instance=rating)
         if form.is_valid():
             rating = form.save()
-            # return redirect(f'/dishes/{dish_id}')
+            # return redirect(f'/dish/{dish_id}')
     
     else: #this is a GET request so return to the dish details page where the blank rating form is displayed
-        return redirect(f'/dishes/{dish.id}')
+        return redirect(f'/dish/{dish.id}')
     
     if hasattr(dish,'ratings'):
         # if user has rated dish, don't let user rate it again
@@ -122,7 +122,7 @@ def rate_dish(request, dish_id):
         'ratings_form': form,
     }
    
-    return render(request, 'dishes/ratings-form.html', context)
+    return render(request, 'dish/ratings-form.html', context)
 
 @login_required
 def update_dish(request, dish_id):
@@ -147,7 +147,7 @@ def update_dish(request, dish_id):
             # Manually save many-to-many data
             form.save_m2m() 
 
-            return redirect(f'/dishes/{dish_id}')
+            return redirect(f'/dish/{dish_id}')
     
     else: #this is a GET request so create a blank form
         form = DishForm(instance=dish)
@@ -158,7 +158,7 @@ def update_dish(request, dish_id):
         'dish': dish,
         'action': 'update',  #use the 'action' key in the template to determine if the form's action should be new or update
     }
-    return render(request,'dishes/dish.html', context)
+    return render(request,'dish/dish.html', context)
 
 def dish_details(request, dish_id):
     # returns dish details page
@@ -203,18 +203,18 @@ def dish_details(request, dish_id):
         'user_rating_this_dish': user_rating_this_dish,
         'ratings_form': form,
     }
-    return render(request, 'dishes/dish-details.html', context)
+    return render(request, 'dish/dish-details.html', context)
 
 @login_required
 def favorites(request):
-    # returns user's  favorite dishes
+    # returns user's  favorite dish
 
     user = request.user #User.objects.get(id=request.session['user_id'])
     context = {
         'user': user,
         'dish': user.favorite_dishes.all().order_by('date'),
     }
-    return render(request, 'dishes/favorites.html', context)
+    return render(request, 'dish/favorites.html', context)
 
 @login_required
 def favorite(request, dish_id):
@@ -253,7 +253,7 @@ def categories(request):
         'user': user,
         'categories' : categories,
     }
-    return render(request, 'dishes/categories.html', context)
+    return render(request, 'dish/categories.html', context)
 
 @staff_member_required
 def get_category(request):
@@ -333,7 +333,7 @@ def search_dishes(request):
         # 'current_page': page_number,
         'search_query': query,
     }
-    return render(request, 'dishes/card-dish.html', context)
+    return render(request, 'dish/card-dish.html', context)
 
 def made_it(request, dish_id):
         pass   
