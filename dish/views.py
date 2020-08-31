@@ -34,7 +34,7 @@ def get_dish(request):
     # New Dish Form
 
     user = request.user #User.objects.get(id=request.session['user_id'])
-    dish = Dish(creator=user) #create a new Dish object with the current user as the creator
+    dish = Dish(poster=user) #create a new Dish object with the current user as the creator
 
     #POST request ==> save new course
     if request.method == 'POST':

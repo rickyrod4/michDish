@@ -52,3 +52,7 @@ body {
     color:red;
 }
 
+#allPost div img {
+    width: 150px;
+    border: 1px solid lightgray;
+}
