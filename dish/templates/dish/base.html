@@ -5,6 +5,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     {% load static %}
 
     <!-- favicon -->
@@ -46,6 +47,11 @@
                         {% block profile %}
                         <a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i class="fas fa-user-cog"></i>Profile</a>
                         {% endblock profile %}
+                    </li>
+                    <li class="nav-item">
+                        {% block categories %}
+                        <a href="/dishes/category" class="nav-link"><i class="fas fa-user-cog"></i>Categories</a>
+                        {% endblock categories %}
                     </li>
                     <li class="nav-item">
                         {% block login %}

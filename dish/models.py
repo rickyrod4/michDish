@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from localflavor.us.models import USStateField
+#from localflavor.us.models import USStateField
 # from django.utils import timezone
 from datetime import datetime, date
 
@@ -19,23 +19,24 @@ class CategoryForm(ModelForm):
         fields = ['name']
 
 def dish_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    # file will be uploaded to MEDIA_ROOT/dish_<id>/<filename>
     return 'dish_{0}/{1}'.format(instance.id, filename)
+
 class Dish(models.Model):
     title = models.CharField(max_length=255)
-    recipe = models.TextField()
-    description = models.TextField(blank=True)
-    ingredients = models.TextField()
-    prep_time = models.IntegerField()
-    cook_time = models.IntegerField()
+    recipe = models.TextField(help_text="Instructions for how to make the dish.")
+    description = models.TextField(blank=True, help_text="Describe the dish, its history and why you were inspired to make it.")
+    ingredients = models.TextField(help_text="Add each ingredient on a new line.")
+    prep_time = models.IntegerField(help_text="Prep time in minutes.")
+    cook_time = models.IntegerField(help_text="Cook time in minutes.")
     servings = models.IntegerField()
     profile_pic = models.ImageField(
-        upload_to='course_directory_path', 
+        upload_to='dish_directory_path', 
         default= 'dishes/blank-dish.jpg',
         blank=True,
         null=True,
         )
-    categories = models.ManyToManyField(Category, related_name='dishes')
+    categories = models.ManyToManyField(Category, related_name='dishes', help_text="Select all categories that apply.")
     poster = models.ForeignKey(User, related_name='user_dishes', on_delete=models.CASCADE)
     user_likes = models.ManyToManyField(User, related_name='liked_dishes')
     created_at = models.DateField(auto_now_add=True)
@@ -50,20 +51,10 @@ class DishForm(ModelForm):
         fields = ['title', 'recipe', 'description',
         'ingredients', 'prep_time', 'cook_time', 'servings', 'profile_pic', 'categories']
 
-
-def comment_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'comment_{0}/{1}'.format(instance.id, filename)
 class Comment(models.Model):
     comment = models.CharField(max_length=255)
     poster = models.ForeignKey(User, related_name='user_comments', on_delete=models.CASCADE)
     dish = models.ForeignKey(Dish, related_name='dish_comments', on_delete=models.CASCADE)
-    profile_pic = models.ImageField(
-        upload_to='course_directory_path', 
-        default= 'dishes/blank-dish.jpg',
-        blank=True,
-        null=True,
-        )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
@@ -74,7 +65,7 @@ class Comment(models.Model):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['comment', 'poster', 'dish']
+        fields = ['comment']
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -86,7 +77,7 @@ class UserProfile(models.Model):
         blank=True,
         null=True,
         )
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True, help_text="Tell us about yourself, chef!")
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     location = models.CharField(max_length=50)
     birthday = models.DateField(blank=True, null=True)
@@ -107,6 +98,11 @@ class Rating(models.Model):
     user = models.ForeignKey(User, related_name='ratings', on_delete=models.CASCADE)
     rating = models.IntegerField()
     review = models.CharField(max_length=255)
+    profile_pic = models.ImageField(
+        upload_to='dish_directory_path', 
+        blank=True,
+        null=True,
+    )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
@@ -117,4 +113,4 @@ class Rating(models.Model):
 class RatingForm(ModelForm):
     class Meta:
         model = Rating
-        fields = ['dish', 'user', 'rating', 'review']
+        fields = ['rating', 'review']

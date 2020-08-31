@@ -253,7 +253,7 @@ def categories(request):
         'user': user,
         'categories' : categories,
     }
-    return render(request, 'dishes/categories.html', context)
+    return render(request, 'dish/categories.html', context)
 
 @staff_member_required
 def get_category(request):

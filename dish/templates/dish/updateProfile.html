@@ -9,17 +9,24 @@
                 <div class="row" id="newPost">
                   <div class="col">
                         <div id="profilePic">
-                          <img src="" alt="">
+                          <img src="{{ user.profile_pic }}" alt="User Profiel Picture">
                           <!-- Display User Profile Image (if none Display Default Image) -->
                         </div>
                         <div id="userInfo">
                           <!-- Dispaly User Info (Name, Bio, Location, Avg. Rating) -->
-                          
+                          <h4>Name: {{ user.first_name }} {{ user.last_name }}</h4>
+                          <h4>Bio: <p>{{ user.bio }}</p> </h4>
+                          <h4>Location: {{ user.location }}</h4>
+                          <h4>Birthday: {{ user.birthday }}</h4>
+                          <div id="updateForm">
+                            <!--Django form for them to be able to update their user Profile information-->
+                          </div>
                         </div>
                   </div>
                   <div class="col">
                       <h4>My Post</h4>
                       <!--Dispaly All User Post-->
+                      {% for recipe in user. %}
 
                   </div>
 
