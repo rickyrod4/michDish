@@ -1,9 +1,4 @@
-<!-- Gets called by views.-->
-
-{% extends 'dish/base.html' %}
-{% block content%} 
-    <!-- Form For Creating a New Recipe -->
-    <form action="{% if action == 'new' %}{% url 'dish:get_dish' %}{% else %}{% url 'dish:update_dish' dish_id=dish.id %}{% endif %}"
+<form action="dish/{{ dish.id }}/comment"
         enctype="multipart/form-data" 
         method="POST" 
         role="form" novalidate>
@@ -30,5 +25,3 @@
         {% endfor %}
         <input type="submit" class="btn btn-primary mb-2" value="Submit" />
     </form>
-
-{% endblock %} 

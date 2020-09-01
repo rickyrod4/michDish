@@ -1,3 +1,14 @@
 {% extends 'dish/base.html' %}
 
-path('categories/<int:category_id>', views.category_dishes, name="category_dishes")
+{% block content %}
+<div class="container">
+    <!--in category.dishes.all()-->
+    {% for dish in dishes %}
+    <div class="row" id="title">
+        <h2>{{ dish.title }}</h2>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

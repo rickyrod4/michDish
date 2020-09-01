@@ -2,6 +2,43 @@
 <!-- **** Need to fix/clarify ****-->
 
 {% extends 'dish/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'dish/css/dashboard.css' %}">
+{% endblock css %}
+
+{% block greeting %}
+  {% if user.is_authenticated %}
+     {{ user.first_name }}
+  {% else %}
+  {% endif %}
+{% endblock greeting %}
+
+{% block favorites %}
+{% if user.is_authenticated %}
+  <a href="" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+  {% else %}
+  {% endif %}
+{% endblock favorites %}
+
+{% block profile %}
+{% if user.is_authenticated %}
+<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i class="fas fa-user-cog"></i>Profile</a>
+{% else %}
+<a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
+{% endif %}
+{% endblock profile %}
+
+{% block login %}
+{% if user.is_authenticated %}
+  <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+  {% else %}
+  <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+  {% endif %}
+{% endblock login %}
+
+
+
 {% block content %} 
                 <div class="row" id="newPost">
                   <div class="title">
@@ -10,41 +47,37 @@
 
 
                 </div>
-                <div class="row" id="allPost">
-                  <div class="title"> 
-                    <h4>All Post</h4>
-
+                <div id="allPost">
+                  <div id="title"> 
+                    <h4>Recent Post</h4>
                   </div>
                   <!-- All Users Post [For Loop Starts] -->
                   {% for dish in dishes %}
-                  <div>
-                    <!-- ****need to add link to User Profile -->
-                    <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
-                  </div>
-                  <div class="row">
-                    <div class= "col" id="picture">
+                  <div class="row post">
+                    <div>
+                      <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
+                    </div>
+                    <div id="picture">
                       <div>
                         <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
                       </div>
                       <div>
-                        <h5>Overall Rating: <!-- ****{{ dish.ratings.avg }} --></h5>
+                        <h5>Overall Rating: {{ dish.ratings.avg }} </h5>
                       </div>
                       <div>
                         <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
                       </div>
                     </div>
-                    <div class="col" id="description">
+                    <div id="description">
                       <p>{{ dish.description }}</p>
+                      <div id="rate">
+                        <a href="">Rate: </a> <!-- ****Change to Django Form Radio 1-5 -->
+                        <!-- Display Form for Users To Type Comments-->
+                        <a href="">Review</a> <!--****Django Form To input Review-->
+                      </div>
                     </div>
                   </div>
-                  <div id="rate">
-                    <a href="">Rate: </a> <!-- ****Change to Django Form Radio 1-5 -->
-                    <!-- Display Form for Users To Type Comments-->
-                    <a href="">Review</a> <!--****Django Form To input Review-->
-                  </div>
-
                   <!-- End For Loop -->
                   {% endfor %}
-
                 </div>
 {% endblock%}

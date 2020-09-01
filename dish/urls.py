@@ -6,6 +6,7 @@ app_name = 'dish'
 dish_patterns = [
     path('new', views.get_dish, name='get_dish'),
     path('<int:dish_id>/rate', views.rate_dish, name="rate_dish"),
+    path('<int:dish_id>/comment', views.comment_dish, name="comment_dish"),
     path('<int:dish_id>/update', views.update_dish, name="update_dish"),
     path('<int:dish_id>', views.dish_details, name="dish_details"),
     path('<int:dish_id>/favorite', views.favorite, name="favorite"),

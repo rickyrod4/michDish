@@ -1,4 +1,18 @@
 {% extends 'dish/base.html' %}
+{% load static %}
+{% block css%} {% endblock css %}
 {% block content %}
+
+
+<div class="container">
+    <div id="categories">
+        <h3>Select A Category</h3>
+        {% for category in categories %}
+        <div id="{{ category.name }}">
+            <h5><a href="/category/{{ category.id }}/">{{ category.name }}</a></h5> <!--****Confirm the Path -->
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}

@@ -29,7 +29,7 @@ def index(request):
     }
     return render(request, 'dish/dashboard.html', context)
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def get_dish(request):
     # New Dish Form
 
@@ -105,7 +105,7 @@ def rate_dish(request, dish_id):
             user_rating_this_dish = None
 
         #recalculate average ratings
-        average_rating = Rating.objects.filter(dish=dish).aggregate(Avg('number_of_stars'))['number_of_stars__avg'] or 0
+        average_rating = Rating.objects.filter(dish=dish).aggregate(Avg('rating'))['rating__avg'] or 0
         all_ratings = dish.ratings.all()
 
     else:
@@ -122,7 +122,43 @@ def rate_dish(request, dish_id):
         'ratings_form': form,
     }
    
-    return render(request, 'dish/ratings-form.html', context)
+    return render(request, 'dish/ratingForm.html', context)
+
+@login_required
+def comment_dish(request, dish_id):
+    # This view can be called via Ajax and returns only the ratings form
+
+    user = request.user #User.objects.get(id=request.session['user_id'])
+    dish = Dish.objects.get(id=dish_id)
+
+    # print(f'Processing rating of dish {dish.title} by {user.full_name()}')
+    if request.method == 'POST':
+
+        comment = Comment(user=user, dish=dish)
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save()
+            # return redirect(f'/dish/{dish_id}')
+    
+    else: #this is a GET request so return to the dish details page where the blank rating form is displayed
+        return redirect(f'/dish/{dish.id}')
+    
+    if hasattr(dish,'dish_comments'):
+        all_comments = dish.dish_comments.all()
+
+    else:
+        all_comments = None
+
+    form = CommentForm()
+
+    context = {
+        'user': user,
+        'dish': dish,
+        'all_comments': all_ratings,
+        'comments_form': form,
+    }
+   
+    return render(request, 'dish/commentForm.html', context)
 
 @login_required
 def update_dish(request, dish_id):
@@ -184,7 +220,7 @@ def dish_details(request, dish_id):
             form = RatingForm()
 
         #get the oversall ratings for this dish
-        average_rating = Rating.objects.filter(dish=dish).aggregate(Avg('number_of_stars'))['number_of_stars__avg'] or 0
+        average_rating = Rating.objects.filter(dish=dish).aggregate(Avg('rating'))['rating__avg'] or 0
         all_ratings = dish.ratings.all()
 
     else:
@@ -201,7 +237,7 @@ def dish_details(request, dish_id):
         'all_ratings': all_ratings,
         'user_has_rated_dish': user_has_rated_dish,
         'user_rating_this_dish': user_rating_this_dish,
-        'ratings_form': form,
+        'form': form,
     }
     return render(request, 'dish/dish-details.html', context)
 
@@ -307,7 +343,7 @@ def category_dishes(request, category_id):
     context = {
         'user': user,
         'category' : category,
-        'courses': category.dishes.all().order_by('rating__rating'),
+        'dishes': category.dishes.all().order_by('rating__rating'),
     }
     return render(request, 'classes/interest-classes.html', context)
 
