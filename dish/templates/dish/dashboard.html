@@ -3,7 +3,42 @@
 
 {% extends 'dish/base.html' %}
 {% load static %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'dish/css/dashboard.css' %}">
+{% endblock css %}
+
+{% block greeting %}
+  {% if user.is_authenticated %}
+     {{ user.first_name }}
+  {% else %}
+  {% endif %}
+{% endblock greeting %}
+
+{% block favorites %}
+{% if user.is_authenticated %}
+  <a href="" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+  {% else %}
+  {% endif %}
+{% endblock favorites %}
+
+{% block profile %}
+{% if user.is_authenticated %}
+<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i class="fas fa-user-cog"></i>Profile</a>
+{% else %}
+<a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
+{% endif %}
+{% endblock profile %}
+
+{% block login %}
+{% if user.is_authenticated %}
+  <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+  {% else %}
+  <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+  {% endif %}
+{% endblock login %}
+
+
+
 {% block content %} 
                 <div class="row" id="newPost">
                   <div class="title">
@@ -18,9 +53,8 @@
                   </div>
                   <!-- All Users Post [For Loop Starts] -->
                   {% for dish in dishes %}
-                  <div class="row" class="post">
+                  <div class="row post">
                     <div>
-                      <!-- ****need to add link to User Profile -->
                       <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
                     </div>
                     <div id="picture">

@@ -31,7 +31,7 @@ class Dish(models.Model):
     cook_time = models.IntegerField(help_text="Cook time in minutes.")
     servings = models.IntegerField()
     profile_pic = models.ImageField(
-        upload_to='dish_directory_path', 
+        upload_to=dish_directory_path, 
         default= 'dishes/blank-dish.jpg',
         blank=True,
         null=True,
@@ -72,7 +72,7 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.id, filename)
 class UserProfile(models.Model):
     profile_pic = models.ImageField(
-        upload_to='user_directory_path', 
+        upload_to= user_directory_path, 
         default= 'users/blank-user.jpg',
         blank=True,
         null=True,
@@ -97,9 +97,9 @@ class Rating(models.Model):
     dish = models.ForeignKey(Dish, related_name='ratings', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='ratings', on_delete=models.CASCADE)
     rating = models.IntegerField()
-    review = models.CharField(max_length=255)
+    review = models.TextField()
     profile_pic = models.ImageField(
-        upload_to='dish_directory_path', 
+        upload_to=dish_directory_path, 
         blank=True,
         null=True,
     )
@@ -113,4 +113,4 @@ class Rating(models.Model):
 class RatingForm(ModelForm):
     class Meta:
         model = Rating
-        fields = ['rating', 'review']
+        fields = ['rating', 'review', 'profile_pic']

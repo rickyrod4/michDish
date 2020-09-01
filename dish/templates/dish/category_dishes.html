@@ -3,9 +3,11 @@
 {% block content %}
 <div class="container">
     <!--in category.dishes.all()-->
+    {% for dish in dishes %}
     <div class="row" id="title">
-        <h2>{{  }}</h2>
+        <h2>{{ dish.title }}</h2>
     </div>
+    {% endfor %}
 </div>
 
 
