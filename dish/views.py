@@ -235,6 +235,7 @@ def dish_details(request, dish_id):
         'dish': dish,
         'average_rating': average_rating,
         'all_ratings': all_ratings,
+        'total_time' : dish.prep_time + dish.cook_time,
         'user_has_rated_dish': user_has_rated_dish,
         'user_rating_this_dish': user_rating_this_dish,
         'form': form,
@@ -248,7 +249,7 @@ def favorites(request):
     user = request.user #User.objects.get(id=request.session['user_id'])
     context = {
         'user': user,
-        'dish': user.favorite_dishes.all().order_by('date'),
+        'dishes': Dish.objects.filter(user_likes__in=[user.id]).order_by('created_at') #user.liked_dishes.all().order_by('dish__created_at'),
     }
     return render(request, 'dish/favorites.html', context)
 
@@ -299,8 +300,19 @@ def get_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('/dish/categories')
+
+            # save the form, but do not commit changes to the database yet
+            # we need to do some extra work for the picture
+            category = form.save(commit=False)
+        
+            # if the user deleted the previous photo, add the default photo
+            if form.cleaned_data['profile_pic'] == None or form.cleaned_data['profile_pic'] == False:
+                dish.profile_pic = Category._meta.get_field('profile_pic').get_default()
+
+            #save the dish and then save the many-to-many data from the form
+            category.save()
+
+            return redirect('/category/')
     
     else: #this is a GET request so create a blank form
         form = CategoryForm()
@@ -322,8 +334,19 @@ def update_category(request, category_id):
 
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
-            category = form.save()
-            return redirect(f'/category/{category_id}')
+
+            # save the form, but do not commit changes to the database yet
+            # we need to do some extra work for the picture
+            category = form.save(commit=False)
+        
+            # if the user deleted the previous photo, add the default photo
+            if form.cleaned_data['profile_pic'] == None or form.cleaned_data['profile_pic'] == False:
+                dish.profile_pic = Category._meta.get_field('profile_pic').get_default()
+
+            #save the dish and then save the many-to-many data from the form
+            category.save()
+
+            return redirect('/category/')
     
     else: #this is a GET request so create an update form
         form = CategoryForm(instance=category)
@@ -343,9 +366,9 @@ def category_dishes(request, category_id):
     context = {
         'user': user,
         'category' : category,
-        'dishes': category.dishes.all().order_by('rating__rating'),
+        'dishes': Dish.objects.filter(categories__in=[category_id]).order_by('ratings__rating') #category.dishes.all().order_by('rating__rating'),
     }
-    return render(request, 'classes/interest-classes.html', context)
+    return render(request, 'dish/category_dishes.html', context)
 
 def search_dishes(request):
     query = request.GET.get('q', '') #get the search criterial from the querystring (or '' if it doesn't exist)
@@ -353,10 +376,10 @@ def search_dishes(request):
     if query:
         queryset = (Q(title__icontains = query)) | (Q(description__icontains=query)) | (Q(ingredients__icontains=query)) | (Q(instructions__icontains=query))
         # Q(poster__username__icontains = query) | Q(categories__name__icontains = query)
-        dishes = Dish.objects.filter(queryset).distinct().order_by('date')
+        dishes = Dish.objects.filter(queryset).distinct() #.order_by('date')
         print("DISHES: ", dishes)
     else:
-        dishes = Dish.objects.all().order_by('date')
+        dishes = Dish.objects.all() #.order_by('date')
 
     # paginator = Paginator(dishes, DISHSES_PER_PAGE) #show 9 dishes per page
     # page_number = request.GET.get('page') or 1

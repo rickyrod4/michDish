@@ -1,34 +1,54 @@
 <!-- Gets called by views.-->
 
 {% extends 'dish/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'dish/css/createDish.css' %}">
+{% endblock css %}
+
 {% block content%} 
-    <!-- Form For Creating a New Recipe -->
-    <form action="{% if action == 'new' %}{% url 'dish:get_dish' %}{% else %}{% url 'dish:update_dish' dish_id=dish.id %}{% endif %}"
-        enctype="multipart/form-data" 
-        method="POST" 
-        role="form" novalidate>
-        {% csrf_token %}
-                    
-        {% for field in form.visible_fields %}
-        <div class="fieldWrapper form-group"
-            data-id="{{ field.name }}" 
-            aria-required="{% if field.field.required %}true{% else %}false{% endif %}">
-            {% for error in field.errors %}
-            <p class="alert alert-danger"><strong>{{ error }}</strong></p>
-            {% endfor %}
-                        
-            {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
-            {{ field }}
-            {% if field.help_text %}
-            <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
+<div class="container new-dish">
+    <div class="header">
+        <img src="{% static 'dish/icon_reverse.png' %}" width="40px" alt="Mich Dish logo">
+        <div>
+            <h1>{{ action|capfirst }} Dish</h1>
+            <p class="">What's Cookin', Chef {{ user.first_name }}?</p>
         </div>
-        {% endfor %}
+    </div>
+    <div class="content">
+        <!-- Form For Creating a New Recipe -->
+        <form action="{% if action == 'new' %}{% url 'dish:get_dish' %}{% else %}{% url 'dish:update_dish' dish_id=dish.id %}{% endif %}"
+            enctype="multipart/form-data" 
+            method="POST" 
+            role="form" novalidate>
+            {% csrf_token %}
+                        
+            {% for field in form.visible_fields %}
+            <div class="fieldWrapper form-group"
+                data-id="{{ field.name }}" 
+                aria-required="{% if field.field.required %}true{% else %}false{% endif %}">
 
-        {% for field in form.hidden_fields %}
-            {{ field }}
-        {% endfor %}
-        <input type="submit" class="btn btn-primary mb-2" value="Submit" />
-    </form>
+                {% for error in field.errors %}
+                <p class="alert alert-danger"><strong>{{ error }}</strong></p>
+                {% endfor %}
+                            
+                {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
+                {{ field }}
+                {% if field.help_text %}
+                <small id="help_for_{{ field.name }}" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
 
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            <div class="d-flex justify-content-center align-items-center">
+                <a href="{% if request.META.HTTP_REFERER == request.build_absolute_uri %}/{% else %}{{ request.META.HTTP_REFERER }}{% endif %}" class="btn btn-outline-secondary mb-2 mx-2" role="button">Cancel</a>
+                <input type="submit" class="btn btn-primary mb-2" value="Submit" />
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %} 

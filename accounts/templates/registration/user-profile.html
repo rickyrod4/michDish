@@ -1,22 +1,28 @@
 {% extends 'dish/base.html' %}
 {% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'accounts/user-profile.css' %}">
+{% endblock css %}
+
 {% block greeting %}
-  {% if user.is_authenticated %}
-     {{ user.first_name }}
-  {% else %}
-  {% endif %}
+{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}
 {% endblock greeting %}
 
 {% block favorites %}
 {% if user.is_authenticated %}
-  <a href="" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
-  {% else %}
-  {% endif %}
+<a href="{% url 'dish:favorite_dishes' %}" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+{% else %}
+{% endif %}
 {% endblock favorites %}
 
 {% block profile %}
 {% if user.is_authenticated %}
-<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i class="fas fa-user-cog"></i>Profile</a>
+{% if user.id == profiled_user.id %}
+{% else %}
+<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i
+        class="fas fa-user-cog"></i>Profile</a>
+{% endif %}
 {% else %}
 <a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
 {% endif %}
@@ -24,31 +30,56 @@
 
 {% block login %}
 {% if user.is_authenticated %}
-  <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
-  {% else %}
-  <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
-  {% endif %}
+<a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+{% else %}
+<a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+{% endif %}
 {% endblock login %}
 {% block content %}
-              <div id="main-content">
-                <div class="row" id="newPost">
-                  <div class="col">
-                        <div id="profilePic">
-                          <h4>Profile Picture Should go here</h4>
-                          <img src="{{ profiled_user.profile.profile_pic.url }}" alt="User Profile Picture">
-                          <!-- Display User Profile Image (if none Display Default Image) -->
-                        </div>
-                        <div id="userInfo">
-                          <!-- Dispaly User Info (Name, Bio, Location, Avg. Rating) -->
-                          <h4>Name: {{ profiled_user.first_name }} {{ profiled_user.last_name }}</h4>
-                          <h4>Bio: <p>{{ profiled_user.profile.bio }}</p> </h4>
-                          <h4>Location: {{ profiled_user.profile.location }}</h4>
-                          <h4>Birthday: {{ profiled_user.profile.birthday }}</h4>
-                        </div>
-                  </div>
-                  <div class="col">
-                      <h4>My Post</h4>
-                      <!--Dispaly All User Post-->
+<div id="main-content">
+    <div class="row" id="newPost">
+        <div class="col-8">
+            <div id="profilePic">
+                <h4>Name: {{ profiled_user.first_name }} {{ profiled_user.last_name }}</h4>
 
-                  </div>
-{% endblock %}
+                {% if profiled_user.id == user.id %}
+                <p class="edit-profile ml-2" title="Edit" style="color:#009EC3">
+                    <a href="{% url 'accounts:update_user_profile' profiled_user_id=profiled_user.id %}">
+                        <small><i class="fas fa-pen"></i> Edit</small>
+                    </a>
+                </p>
+                {% endif %}
+
+                <img src="{{ profiled_user.profile.profile_pic.url }}" alt="User Profile Picture">
+                <!-- Display User Profile Image (if none Display Default Image) -->
+            </div>
+            <div id="userInfo">
+                <!-- Dispaly User Info (Name, Bio, Location, Avg. Rating) -->
+                <h4>Bio: <p>{{ profiled_user.profile.bio }}</p>
+                </h4>
+                <h4>Location: {{ profiled_user.profile.location }}</h4>
+                <h4>Birthday: {{ profiled_user.profile.birthday }}</h4>
+            </div>
+        </div>
+        <div class="dishes col-4">
+            <h4>My Dishes</h4>
+            <!--Dispaly All User Post-->
+            {% for dish in user.user_dishes.all %}
+            <div class="dish" id="{{ dish.name }}" data-id="{{ dish.id }}">
+                <a href="/dish/{{ dish.id }}">
+                    <img src="{{ dish.profile_pic.url }}" alt="Picture of category {{ dish.name }}">
+                    <h5>{{ dish.name }}</h5>
+                    {% if dish.poster.id == user.id %}
+                    <p class="edit-dish" title="Edit" style="color:#009EC3">
+                        <a href="{% url 'dish:update_dish' dish_id=dish.id %}">
+                            <small><i class="fas fa-pen"></i> Edit</small>
+                        </a>
+                    </p>
+                    {% endif %}
+                </a>
+            </div>
+
+            {% endfor %}
+
+        </div>
+        {% endblock %}

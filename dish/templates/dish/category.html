@@ -1,47 +1,53 @@
+<!-- Gets called by views.-->
+
 {% extends 'dish/base.html' %}
 {% load static %}
+
 {% block css %}
-<link rel="stylesheet" href="{% static 'dish/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'dish/css/createCategory.css' %}">
 {% endblock css %}
 
-{% block content %}
-<div class="container signup">
+{% block content%} 
+<div class="container new-category">
     <div class="header">
         <img src="{% static 'dish/icon_reverse.png' %}" width="40px" alt="Mich Dish logo">
-        <h2>User Profile Form</h2>
+        <div>
+            <h1>{{ action|capfirst }} Category</h1>
+        </div>
     </div>
     <div class="content">
-
-        <form action="{% url 'accounts:update_user_profile' profiled_user_id=profiled_user.id %}" enctype="multipart/form-data"
-            method="POST" role="form" novalidate>
+        <!-- Form For Creating a New Recipe -->
+        <form action="{% if action == 'new' %}{% url 'dish:get_category' %}{% else %}{% url 'dish:update_category' category_id=category.id %}{% endif %}"
+            enctype="multipart/form-data" 
+            method="POST" 
+            role="form" novalidate>
             {% csrf_token %}
-
+                        
             {% for field in form.visible_fields %}
-            <div class="fieldWrapper form-group" data-id="{{ field.name }}"
+            <div class="fieldWrapper form-group"
+                data-id="{{ field.name }}" 
                 aria-required="{% if field.field.required %}true{% else %}false{% endif %}">
+
                 {% for error in field.errors %}
                 <p class="alert alert-danger"><strong>{{ error }}</strong></p>
                 {% endfor %}
-
+                            
                 {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
                 {{ field }}
                 {% if field.help_text %}
-                <p class="help">{{ field.help_text|safe }}</p>
+                <small id="help_for_{{ field.name }}" class="form-text text-muted">{{ field.help_text|safe }}</small>
                 {% endif %}
             </div>
             {% endfor %}
 
             {% for field in form.hidden_fields %}
-            {{ field }}
+                {{ field }}
             {% endfor %}
-
             <div class="d-flex justify-content-center align-items-center">
                 <a href="{% if request.META.HTTP_REFERER == request.build_absolute_uri %}/{% else %}{{ request.META.HTTP_REFERER }}{% endif %}" class="btn btn-outline-secondary mb-2 mx-2" role="button">Cancel</a>
                 <input type="submit" class="btn btn-primary mb-2" value="Submit" />
             </div>
-
         </form>
     </div>
 </div>
-
-{% endblock %}
+{% endblock %} 

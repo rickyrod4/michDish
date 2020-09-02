@@ -1,13 +1,19 @@
 from django.db import models
+from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 #from localflavor.us.models import USStateField
 # from django.utils import timezone
 from datetime import datetime, date
 
-
 class Category(models.Model):
     name = models.CharField(max_length=20)
+    profile_pic = models.ImageField(
+        upload_to='categories/', 
+        default= 'categories/blank-category.jpg',
+        blank=True,
+        null=True,
+        )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
     def __str__(self):
@@ -16,7 +22,11 @@ class Category(models.Model):
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = ['name', 'profile_pic']
+        widgets = {
+            'profile_pic': forms.ClearableFileInput(attrs={'class': 'form-control-file',}),
+            'name' : forms.TextInput(attrs={'class':'form-control'}),
+       }        
 
 def dish_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/dish_<id>/<filename>
@@ -48,8 +58,20 @@ class Dish(models.Model):
 class DishForm(ModelForm):
     class Meta:
         model = Dish
-        fields = ['title', 'recipe', 'description',
-        'ingredients', 'prep_time', 'cook_time', 'servings', 'profile_pic', 'categories']
+        fields = ['title', 'description', 'ingredients', 'recipe', 
+        'prep_time', 'cook_time', 'servings', 'profile_pic', 'categories']
+        widgets = {
+            'profile_pic': forms.ClearableFileInput(attrs={'class': 'form-control-file',}),
+            'title' : forms.TextInput(attrs={'class':'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'ingredients': forms.Textarea(attrs={'class': 'form-control'}),
+            'recipe': forms.Textarea(attrs={'class': 'form-control'}),
+            'prep_time' : forms.TextInput(attrs={'class':'form-control'}),
+            'cook_time' : forms.TextInput(attrs={'class':'form-control'}),
+            'servings' : forms.TextInput(attrs={'class':'form-control'}),
+            'categories': forms.SelectMultiple(attrs={'class': 'form-control'}),
+       }
+
 
 class Comment(models.Model):
     comment = models.CharField(max_length=255)
@@ -91,7 +113,18 @@ class UserProfile(models.Model):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['profile_pic', 'bio', 'location', 'birthday']
+        fields = ['bio', 'location', 'birthday', 'profile_pic']
+        widgets = {
+            'profile_pic': forms.ClearableFileInput(attrs={'class': 'form-control-file',}),
+            'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'location' : forms.TextInput(attrs={'class':'form-control'}),
+            'birth_date': forms.DateTimeInput(attrs={'class': 'form-control'}),
+       }
+
+
+def rating_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/dish_<id>/<filename>
+    return 'dish_{0}/{1}'.format(instance.dish.id, filename)
 
 class Rating(models.Model):
     dish = models.ForeignKey(Dish, related_name='ratings', on_delete=models.CASCADE)

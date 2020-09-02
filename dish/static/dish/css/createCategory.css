@@ -1,12 +1,12 @@
-.container.new-dish {
-    width: 800px;
+.container.new-category {
+    width: 500px;
     margin: 20px auto;
     padding: 0;
     border: 1px solid lightgray;
     border-radius: 8px;
 }
 
-.container.new-dish .header {
+.container.new-category .header {
     padding: 15px;
     background-color: #03989E;
     display:flex;
@@ -17,11 +17,11 @@
     border-radius: 8px 8px 0 0;
 }
 
-.container.new-dish h1 {
+.container.new-category h1 {
     padding-top: 10px;
     margin-left: 10px;
 }
-.container.new-dish .content {
+.container.new-category .content {
     padding: 15px;
 }
 

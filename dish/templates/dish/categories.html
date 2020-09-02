@@ -1,18 +1,68 @@
 {% extends 'dish/base.html' %}
 {% load static %}
-{% block css%} {% endblock css %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'dish/css/categories.css' %}">
+{% endblock css %}
+
+{% block greeting %}
+{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}
+{% endblock greeting %}
+
+{% block favorites %}
+{% if user.is_authenticated %}
+<a href="{% url 'dish:favorite_dishes' %}" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+{% else %}
+{% endif %}
+{% endblock favorites %}
+
+{% block profile %}
+{% if user.is_authenticated %}
+<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i
+    class="fas fa-user-cog"></i>Profile</a>
+{% else %}
+<a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
+{% endif %}
+{% endblock profile %}
+
+{% block categories %}
+{% endblock categories %}
+
+
+{% block login %}
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+{% else %}
+<a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+{% endif %}
+{% endblock login %}
+
 {% block content %}
 
 
 <div class="container">
-    <div id="categories">
-        <h3>Select A Category</h3>
-        {% for category in categories %}
-        <div id="{{ category.name }}">
-            <h5><a href="/category/{{ category.id }}/">{{ category.name }}</a></h5> <!--****Confirm the Path -->
-        </div>
-        {% endfor %}
+  
+  <div class="header d-flex align-items-center">
+    <h3 class="mr-3">Select A Category</h3>
+    <a href="{% url 'dish:get_category' %}" class="btn btn-info" role="button" style="font-weight:bold;">New</a>
     </div>
+
+  <div id="categories">
+
+    {% for category in categories %}
+    <div class="category" id="{{ category.name }}" data-id="{{ category.id }}">
+      <a href="/category/{{ category.id }}">
+        <img src="{{ category.profile_pic.url }}" alt="Picture of category {{ category.name }}">
+        <h5>{{ category.name }}</h5>
+        <p class="edit-category" title="Edit" style="color:#009EC3">
+          <a href="{% url 'dish:update_category' category_id=category.id %}">
+              <small><i class="fas fa-pen"></i> Edit</small>
+          </a>
+        </p>
+      </a>
+    </div>
+    {% endfor %}
+
+  </div>
 </div>
 
 {% endblock %}

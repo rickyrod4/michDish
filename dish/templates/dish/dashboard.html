@@ -8,15 +8,12 @@
 {% endblock css %}
 
 {% block greeting %}
-  {% if user.is_authenticated %}
-     {{ user.first_name }}
-  {% else %}
-  {% endif %}
+  {% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}
 {% endblock greeting %}
 
 {% block favorites %}
 {% if user.is_authenticated %}
-  <a href="" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+  <a href="{% url 'dish:favorite_dishes' %}" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
   {% else %}
   {% endif %}
 {% endblock favorites %}

@@ -1,93 +1,137 @@
 <!-- gets called by views.dish_details-->
 {% extends 'dish/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'dish/css/dish.css' %}">
+{% endblock css %}
+
+{% block greeting %}{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}{% endblock greeting %}
+
+{% block favorites %}
+{% if user.is_authenticated %}
+  <a href="{% url 'dish:favorite_dishes' %}" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+  {% else %}
+  {% endif %}
+{% endblock favorites %}
+
+{% block profile %}
+{% if user.is_authenticated %}
+<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i class="fas fa-user-cog"></i>Profile</a>
+{% else %}
+<a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
+{% endif %}
+{% endblock profile %}
+
+{% block login %}
+{% if user.is_authenticated %}
+  <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+  {% else %}
+  <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+  {% endif %}
+{% endblock login %}
+
 {% block content %}
+<div id="main-content" data-id="{{ dish.id }}">
+        <div class="row" id="newPost">
+            <div class="title">
+                <div class="d-inline-flex align-items-baseline">
+                    <h2>{{ dish.title }}</h2>
+                    {% if dish.poster.id == user.id %}
+                    <p class="edit-category ml-2" title="Edit" style="color:#009EC3">
+                        <a href="{% url 'dish:update_dish' dish_id=dish.id %}">
+                            <small><i class="fas fa-pen"></i> Edit</small>
+                        </a>
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!--Inser User Profile link-->
+                <h2>Chef: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="picture">
+                    <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
+                </div>
+                <div id="category">
+                    <!--Insert link tag to be able to take to similar category pages-->
+                    <h4>Categories</h4>
+                    <ul class="categories">
+                    {% for category in dish.categories.all %}
+                        <li class="category" data-id="{{ category.id }}">{{ category.name }}</li>
+                    {% endfor %}
+                    </ul> 
+                </div>
+            </div>
 
 
-        <div id="main-content" data-id="{{ dish.id }}">
-                <div class="row" id="newPost">
-                    <div class="title">
-                        <h2>{{ dish.title }}</h2>
-                        <!--Inser User Profile link-->
-                        <h2>Chef: <a href="">{{ user.first_name }} {{ user.last_name }}</a></h2>
+            <div class="col">
+                <div id="recipe">
+                    <div id="description">
+                        <p><h4>Description: </h4>{{ dish.description }}</p>
+                    </div>
+                    <div id="ingredients">
+                        <p><h4>Ingredients: </h4>{{ dish.ingredients }}</p>
+                    </div>
+                    <div id="recipeWriting">
+                        <p><h4>Recipe Instructions: </h4>{{ dish.recipe }}</p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div id="picture">
-                            <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
-                        </div>
-                        <div id="category">
-                            <!--Insert link tag to be able to take to similar category pages-->
-                            <h4>Category: {{ dish.categories.name }}</h4>
-                        </div>
+                <div id="ratings">
+                    <div class="btn btn-info"><!--Javascript here to display the newRating Div-->
+                        Rate:
                     </div>
-
-
-                    <div class="col">
-                        <div id="recipe">
-                            <div id="recipeWriting">
-                                <p><h4>Recipe: </h4>{{ dish.recipe }}</p>
-                            </div>
-                            <div id="instructions">
-                                <p><h4>Instructions: </h4>{{ dish.instructions }}</p>
-                            </div>
-                            <div id="description">
-                                <p><h4>Description: </h4>{{ dish.description }}</p>
-                            </div>
-                        </div>
-                        <div id="ratings">
-                            <div class="btn btn-info"><!--Javascript here to display the newRating Div-->
-                                Rate:
-                            </div>
-                            <div id="newRating" style="display: none;">
-                                 {% include 'dish/ratingForm.html' %}<!-- ***Django Form Radio edition -->
-                            </div>
-                            <div id="newComment">
-                                <!-- ****add comment here hidden -->
-                            </div>
-                            <div id="usersComments">
-                                <!--****Check for Comments-->
-                                {% for comment in dish.comment.all %}
-                                <p>{{ comment }}</p>
-                                {% endfor %}
-                            </div>
-                        </div>
+                    <div id="newRating" style="display: none;">
+                            {% include 'dish/ratingForm.html' %}<!-- ***Django Form Radio edition -->
                     </div>
-
-
-                    <div class="col">
-                        <div id="times">
-                            <div id="cookTime">
-                                <h4>Cook Time: {{ dish.cook_time }} Min</h4>
-                            </div>
-                            <div id="prepTime">
-                                <h4>Prep Time: {{ dish.prep_time }} Min</h4>
-                            </div>
-                            <div id="totalTime">
-                                <h4>Total Time: Min</h4>
-                            </div>
-                            <div id="serving">
-                                <h4>Serving: {{ dish.servings }}</h4>
-                            </div>
-                        </div>
-                        <div id="ratings">
-                            <div id="avgRating">
-                                <h4>Dish Average Rating: {{ average_rating }}</h4>
-                            </div>
-                            <div id="reviews">
-                                {% for rating in all_ratings %}
-                                <div id="userName">
-                                    <!--****User Link-->
-                                    <h6><a href="">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
-                                </div>
-                                <div id="review">
-                                    <p>{{ rating.review }} - {{ rating.created_at }}</p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
+                    <div id="newComment">
+                        <!-- ****add comment here hidden -->
+                    </div>
+                    <div id="usersComments">
+                        <!--****Check for Comments-->
+                        {% for comment in dish.comment.all %}
+                        <p>{{ comment }}</p>
+                        {% endfor %}
                     </div>
                 </div>
-        </div>        
+            </div>
+
+
+            <div class="col">
+                <div id="times">
+                    <div id="cookTime">
+                        <h4>Cook Time: {{ dish.cook_time }} Min</h4>
+                    </div>
+                    <div id="prepTime">
+                        <h4>Prep Time: {{ dish.prep_time }} Min</h4>
+                    </div>
+                    <div id="totalTime">
+                        <h4>Total Time: {{ total_time }} Min</h4>
+                    </div>
+                    <div id="serving">
+                        <h4>Serving: {{ dish.servings }}</h4>
+                    </div>
+                </div>
+                <div id="ratings">
+                    <div id="avgRating">
+                        <h4>Dish Average Rating: {{ average_rating }}</h4>
+                    </div>
+                    <div id="reviews">
+                        {% for rating in all_ratings %}
+                        <div id="userName">
+                            <!--****User Link-->
+                            <h6><a href="">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
+                        </div>
+                        <div id="review">
+                            <p>{{ rating.review }} - {{ rating.created_at }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>        
 
 {% endblock %}
