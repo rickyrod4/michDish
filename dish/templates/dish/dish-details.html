@@ -81,7 +81,7 @@
                 </div>
                 <div id="ratings">
                     <div class="btn btn-info"><!--Javascript here to display the newRating Div-->
-                        Rate:
+                        Rate
                     </div>
                     <div id="newRating" style="display: none;">
                             {% include 'dish/ratingForm.html' %}<!-- ***Django Form Radio edition -->
@@ -122,7 +122,7 @@
                         {% for rating in all_ratings %}
                         <div id="userName">
                             <!--****User Link-->
-                            <h6><a href="">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
+                            <h6><a href="{% url 'accounts:user_profile' profiled_user_id=rating.user.id %}">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
                         </div>
                         <div id="review">
                             <p>{{ rating.review }} - {{ rating.created_at }}</p>

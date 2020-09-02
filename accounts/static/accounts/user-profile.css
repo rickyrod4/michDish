@@ -1,3 +1,7 @@
+#main-content {
+    padding-top: 2%;
+}
+
 .dishes {
     width: 250px;
     padding: 20px;
@@ -28,4 +32,27 @@
 #profilePic img {
     max-width: 100%;
     max-height: 200px;
+}
+#profilePic {
+    border: black 3px solid;
+    border-radius: 10px;
+}
+#userInfo {
+    border: black 3px solid;
+    border-radius: 10px;
+}
+#header {
+    width: 66%;
+    display: flex;
+    margin-left: 20%;
+    padding: 1% 15%;
+}
+.dishes {
+    border: 3px solid black;
+    border-radius: 10px;
+}
+
+#profilePic {
+    border: black 3px solid;
+    border-radius: 10px;
 }
