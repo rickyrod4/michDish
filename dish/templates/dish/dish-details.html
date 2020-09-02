@@ -89,12 +89,6 @@
                     <div id="newComment">
                         <!-- ****add comment here hidden -->
                     </div>
-                    <div id="usersComments">
-                        <!--****Check for Comments-->
-                        {% for comment in dish.comment.all %}
-                        <p>{{ comment }}</p>
-                        {% endfor %}
-                    </div>
                 </div>
             </div>
 
@@ -118,11 +112,13 @@
                     <div id="avgRating">
                         <h4>Dish Average Rating: {{ average_rating }}</h4>
                     </div>
+
+                    <h4>Ratings</h4>
                     <div id="reviews">
                         {% for rating in all_ratings %}
                         <div id="userName">
                             <!--****User Link-->
-                            <h6><a href="">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
+                            <h6><a href="{% url 'accounts:user_profile' profiled_user_id=rating.user.id %}">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
                         </div>
                         <div id="review">
                             <p>{{ rating.review }} - {{ rating.created_at }}</p>
@@ -130,6 +126,16 @@
                         {% endfor %}
                     </div>
                 </div>
+
+                <h4>Comments</h4>
+                <div id="usersComments">
+                    <!--****Check for Comments-->
+                    {% for comment in dish.dish_comments.all %}
+                    <h6><a href="{% url 'accounts:user_profile' profiled_user_id=comment.poster.id %}">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a></h6>
+                    <p>{{ comment.comment }} - {{ comment.created_at }}</p>
+                    {% endfor %}
+                </div>
+
             </div>
         </div>
 </div>        
