@@ -1,12 +1,27 @@
-#title {
+#header h4{
     display: inline-block;
     margin-left: 35%;
 }
-.post div {
-    display: inline-block;
-    margin-left: 50%;
-}
+
 .post {
-    outline: 1pt black dotted;
+    outline: 5px black solid;
     
+}
+.col {
+    border: dotted red 2px;
+    border-radius: 3px;
+    width: 88%;
+    height: 100%;
+}
+.row {
+    padding: 15px;
+}
+#dishTitle {
+    margin-left: 28%;
+}
+span {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: bold;
+    font-weight: bold;
+    color: royalblue;
 }

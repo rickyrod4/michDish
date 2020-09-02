@@ -1,3 +1,9 @@
-* {
-    outline: 1pt dotted black;
+
+#picture img{
+    width: 60%;
+    margin-left: 20%;
+    padding: 10px;
+}
+.col {
+    outline: solid black 2px;
 }
