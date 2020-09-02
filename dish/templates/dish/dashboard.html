@@ -7,9 +7,7 @@
 <link rel="stylesheet" href="{% static 'dish/css/dashboard.css' %}">
 {% endblock css %}
 
-{% block greeting %}
-  {% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}
-{% endblock greeting %}
+{% block greeting %}{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}{% endblock greeting %}
 
 {% block favorites %}
 {% if user.is_authenticated %}

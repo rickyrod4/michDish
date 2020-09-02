@@ -374,7 +374,7 @@ def search_dishes(request):
     query = request.GET.get('q', '') #get the search criterial from the querystring (or '' if it doesn't exist)
     print("SEARCHING FOR: ", query)
     if query:
-        queryset = (Q(title__icontains = query)) | (Q(description__icontains=query)) | (Q(ingredients__icontains=query)) | (Q(instructions__icontains=query))
+        queryset = (Q(title__icontains = query)) | (Q(description__icontains=query)) | (Q(ingredients__icontains=query)) | (Q(recipe__icontains=query))
         # Q(poster__username__icontains = query) | Q(categories__name__icontains = query)
         dishes = Dish.objects.filter(queryset).distinct() #.order_by('date')
         print("DISHES: ", dishes)
@@ -392,7 +392,7 @@ def search_dishes(request):
         # 'current_page': page_number,
         'search_query': query,
     }
-    return render(request, 'dish/card-dish.html', context)
+    return render(request, 'dish/dishes.html', context)
 
 def made_it(request, dish_id):
         pass   
