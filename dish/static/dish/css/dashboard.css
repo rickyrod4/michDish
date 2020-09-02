@@ -8,10 +8,11 @@
     
 }
 .col {
-    border: dotted red 2px;
+    border: dotted royalblue 2px;
     border-radius: 3px;
     width: 88%;
     height: 100%;
+    border-style: inset;
 }
 .row {
     padding: 15px;
