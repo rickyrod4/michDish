@@ -56,3 +56,8 @@
     border: black 3px solid;
     border-radius: 10px;
 }
+
+
+.bio {
+    white-space: pre-line;
+}

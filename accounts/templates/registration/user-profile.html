@@ -58,7 +58,8 @@
             </div>
             <div id="userInfo">
                 <!-- Dispaly User Info (Name, Bio, Location, Avg. Rating) -->
-                <h4>Bio: <p>{{ profiled_user.profile.bio }}</p></h4>
+                <h4>Bio: <div class="bio">{{ profiled_user.profile.bio }}</div>
+                </h4>
                 <h4>Location: {{ profiled_user.profile.location }}</h4>
                 <h4>Birthday: {{ profiled_user.profile.birthday }}</h4>
                 <h4>Average Rating: {{ user_average_rating }}</h4>
@@ -70,7 +71,7 @@
             </div>
             <div id="dishes">
             <!--Dispaly All User Post-->
-            {% for dish in user.user_dishes.all %}
+            {% for dish in profiled_user.user_dishes.all %}
                 <div class="dish row" id="{{ dish.name }}" data-id="{{ dish.id }}">
                     <a href="/dish/{{ dish.id }}">
                         <img src="{{ dish.profile_pic.url }}" alt="Picture of category {{ dish.name }}">

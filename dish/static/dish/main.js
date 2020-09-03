@@ -36,3 +36,26 @@ $('.ratings-form input[type="submit"]').on('click', function(e){
     var dishId = $('#main-content').attr('data-id');
     rateDish(dishId);
 });
+
+$('.search-form').submit(function(e){
+    e.preventDefault();
+    console.log('AJAX SEARCH:')
+    console.log($('.search-form').serialize());
+
+    var data = $('.search-form').serialize();
+    data.csrfmiddlewaretoken = getCookie('csrftoken');
+
+    $.ajax({
+        url: '/search',
+        method: 'GET',
+        data: data,
+    })
+    .done(function(data){
+        console.log(data);
+        $('div.content').html(data);
+    })
+    .fail(function(error){
+        console.log("Error getting search results.");
+        console.log(error);
+    });
+});

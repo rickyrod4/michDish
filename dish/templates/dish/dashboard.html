@@ -7,9 +7,7 @@
 <link rel="stylesheet" href="{% static 'dish/css/dashboard.css' %}">
 {% endblock css %}
 
-{% block greeting %}
-  {% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}
-{% endblock greeting %}
+{% block greeting %}{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}{% endblock greeting %}
 
 {% block favorites %}
 {% if user.is_authenticated %}
@@ -50,23 +48,23 @@
                   </div>
                   <!-- All Users Post [For Loop Starts] -->
                   {% for dish in dishes %}
-                  <div class="row post">
+                  <div class="post">
                     <div id="dishTitle" class="row">
                       <h5><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h5> <!-- Take To Recipe Page -->
                     </div>
-                    <div class="row" id="content">
-                      <div id="picture" class="col">
-                        <div>
+                    <div class="row">
+                      <div class="col-4">
+                        <div id="picture">
                           <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
                         </div>
                         <div>
-                          <h5>Overall Rating: {{ dish.ratings.avg }} </h5>
+                          <h5>Overall Rating: <span data-rating="{{ dish.get_average_rating }}"></span> </h5>
                         </div>
                         <div>
                           <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
                         </div>
                       </div>
-                      <div id="description" class="col">
+                      <div id="description" class="col-8">
                         <p><span>Description:</span>  {{ dish.description }}</p>
                         <div id="rate">
                           <a href="">Rate: {% include 'dish/ratingForm.html' %}</a> <!-- ****Change to Django Form Radio 1-5 -->

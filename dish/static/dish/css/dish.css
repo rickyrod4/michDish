@@ -1,9 +1,35 @@
 
 #picture img{
-    width: 60%;
-    margin-left: 20%;
+    width: 100%;
     padding: 10px;
 }
-.col {
-    outline: solid black 2px;
+.col-3{
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+#category {
+    margin-top: 20px;
+}
+.col-7{
+    border: solid black 2px;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+.col-2{
+    border: solid black 2px;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+.col-2 div {
+    margin-top: 10px;
+}
+span {
+    color: #007bff;
+}
+#userReviews {
+    border-bottom: solid 2px black;
+    border-style: inherit;
 }
