@@ -35,10 +35,13 @@
 <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
 {% endif %}
 {% endblock login %}
+
+
+
 {% block content %}
 <div id="main-content">
     <div class="row" id="newPost">
-        <div class="col-8">
+        <div class="col-4">
             <div id="profilePic">
                 <h4>Name: {{ profiled_user.first_name }} {{ profiled_user.last_name }}</h4>
 
@@ -59,10 +62,14 @@
                 </h4>
                 <h4>Location: {{ profiled_user.profile.location }}</h4>
                 <h4>Birthday: {{ profiled_user.profile.birthday }}</h4>
+                <h4>Average Rating: {{ user_average_rating }}</h4>
             </div>
         </div>
-        <div class="dishes col-4">
-            <h4>My Dishes</h4>
+        <div class="dishes col-8">
+            <div class="row" id="header">
+                <h4>My Dishes</h4>
+            </div>
+            <div id="dishes">
             <!--Dispaly All User Post-->
             {% for dish in profiled_user.user_dishes.all %}
             <div class="dish" id="{{ dish.name }}" data-id="{{ dish.id }}">
@@ -82,4 +89,6 @@
             {% endfor %}
 
         </div>
-        {% endblock %}
+    </div>
+</div>    
+{% endblock %}

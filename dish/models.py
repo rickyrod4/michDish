@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 #from localflavor.us.models import USStateField
 # from django.utils import timezone
 from datetime import datetime, date
+from django.db.models import Avg
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -54,6 +55,9 @@ class Dish(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_average_rating(self):
+        self.ratings.aggregate(Avg('rating'))
 
 class DishForm(ModelForm):
     class Meta:

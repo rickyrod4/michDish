@@ -43,32 +43,34 @@
 
                 </div>
                 <div id="allPost">
-                  <div id="title"> 
+                  <div id="header"> 
                     <h4>Recent Post</h4>
                   </div>
                   <!-- All Users Post [For Loop Starts] -->
                   {% for dish in dishes %}
-                  <div class="row post">
-                    <div>
-                      <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
+                  <div class="post">
+                    <div id="dishTitle" class="row">
+                      <h5><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h5> <!-- Take To Recipe Page -->
                     </div>
-                    <div id="picture">
-                      <div>
-                        <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
+                    <div class="row">
+                      <div class="col-4">
+                        <div id="picture">
+                          <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
+                        </div>
+                        <div>
+                          <h5>Overall Rating: <span data-rating="{{ dish.get_average_rating }}"></span> </h5>
+                        </div>
+                        <div>
+                          <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
+                        </div>
                       </div>
-                      <div>
-                        <h5>Overall Rating: {{ dish.ratings.avg }} </h5>
-                      </div>
-                      <div>
-                        <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
-                      </div>
-                    </div>
-                    <div id="description">
-                      <p>{{ dish.description }}</p>
-                      <div id="rate">
-                        <a href="">Rate: </a> <!-- ****Change to Django Form Radio 1-5 -->
-                        <!-- Display Form for Users To Type Comments-->
-                        <a href="">Review</a> <!--****Django Form To input Review-->
+                      <div id="description" class="col-8">
+                        <p><span>Description:</span>  {{ dish.description }}</p>
+                        <div id="rate">
+                          <a href="">Rate: {% include 'dish/ratingForm.html' %}</a> <!-- ****Change to Django Form Radio 1-5 -->
+                          <!-- Display Form for Users To Type Comments-->
+                          <a href="">Review</a> <!--****Django Form To input Review-->
+                        </div>
                       </div>
                     </div>
                   </div>
