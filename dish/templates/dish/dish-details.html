@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-3">
                 <div id="picture">
                     <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
                 </div>
@@ -60,28 +60,28 @@
                     <h4>Categories</h4>
                     <ul class="categories">
                     {% for category in dish.categories.all %}
-                        <li class="category" data-id="{{ category.id }}">{{ category.name }}</li>
+                        <li class="category" data-id="{{ category.id }}"> <a href="/category/{{ category.id }}">{{ category.name }}</a></li>
                     {% endfor %}
                     </ul> 
                 </div>
             </div>
 
 
-            <div class="col">
+            <div class="col-7">
                 <div id="recipe">
                     <div id="description">
-                        <p><h4>Description: </h4>{{ dish.description }}</p>
+                        <p><h4><span>Description: </span></h4> {{ dish.description }}</p>
                     </div>
                     <div id="ingredients">
-                        <p><h4>Ingredients: </h4>{{ dish.ingredients }}</p>
+                        <p><h4><span>Ingredients: </span></h4>{{ dish.ingredients }}</p>
                     </div>
                     <div id="recipeWriting">
-                        <p><h4>Recipe Instructions: </h4>{{ dish.recipe }}</p>
+                        <p><h4><span>Recipe Instructions: </span></h4>{{ dish.recipe }}</p>
                     </div>
                 </div>
                 <div id="ratings">
                     <div class="btn btn-info"><!--Javascript here to display the newRating Div-->
-                        Rate:
+                        Rate
                     </div>
                     <div id="newRating" style="display: none;">
                             {% include 'dish/ratingForm.html' %}<!-- ***Django Form Radio edition -->
@@ -93,41 +93,44 @@
             </div>
 
 
-            <div class="col">
+            <div class="col-2">
                 <div id="times">
                     <div id="cookTime">
-                        <h4>Cook Time: {{ dish.cook_time }} Min</h4>
+                        <h6><span>Cook Time:</span> {{ dish.cook_time }} Min</h6>
                     </div>
                     <div id="prepTime">
-                        <h4>Prep Time: {{ dish.prep_time }} Min</h4>
+                        <h6><span>Prep Time:</span> {{ dish.prep_time }} Min</h6>
                     </div>
                     <div id="totalTime">
-                        <h4>Total Time: {{ total_time }} Min</h4>
+                        <h6><span>Total Time:</span> {{ total_time }} Min</h6>
                     </div>
                     <div id="serving">
-                        <h4>Serving: {{ dish.servings }}</h4>
+                        <h6><span>Serving:</span> {{ dish.servings }}</h6>
                     </div>
                 </div>
+                <br><br><br>
                 <div id="ratings">
                     <div id="avgRating">
-                        <h4>Dish Average Rating: {{ average_rating }}</h4>
+                        <h6><span>Dish Avg Rating:</span> {{ average_rating }}</h6>
                     </div>
 
-                    <h4>Ratings</h4>
+                    <h6><span>Ratings</span></h6>
                     <div id="reviews">
                         {% for rating in all_ratings %}
-                        <div id="userName">
-                            <!--****User Link-->
-                            <h6><a href="{% url 'accounts:user_profile' profiled_user_id=rating.user.id %}">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
-                        </div>
-                        <div id="review">
-                            <p>{{ rating.review }} - {{ rating.created_at }}</p>
+                        <div id="userReviews">
+                            <div id="userName">
+                                <!--****User Link-->
+                                <h6><a href="{% url 'accounts:user_profile' profiled_user_id=rating.user.id %}">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
+                            </div>
+                            <div id="review">
+                                <p>{{ rating.review }} - {{ rating.created_at }}</p>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
 
-                <h4>Comments</h4>
+                <h6><span>Comments</span></h6>
                 <div id="usersComments">
                     <!--****Check for Comments-->
                     {% for comment in dish.dish_comments.all %}
