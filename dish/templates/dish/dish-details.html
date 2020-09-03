@@ -117,7 +117,7 @@
         <div class="ratings-info col-8">
             <div class="d-inline-flex justify-content-start align-items-center">
                 <h4 class="my-0">Dish Average Rating: <span class="rating-number" data-rating="{{average_rating}}" data-rating-size="medium"></span></h4>
-                <div class="btn btn-info ml-3"><small><i class="fas fa-plus-circle"></i> New Rating</small></div>
+                <div class="btn btn-info ml-3 newDish"><small><i class="fas fa-plus-circle"></i> New Rating</small></div>
             </div>
 
             <div id="newRating" style="display: none;">
@@ -141,11 +141,15 @@
         </div><!-- end .ratings-info -->
 
         <div class="comments col-4">
-            <div id="newComment">
-                <!-- ****add comment here hidden -->
-            </div><!-- end #newComment -->
+            <div class="d-inline-flex justify-content-start align-items-center">
+                <h4>Comments</h4>
+                <div class="btn btn-info ml-3 newComment"><small><i class="fas fa-plus-circle"></i> New Comment</small></div>
+            </div>
+            <div id="newComment" style="display: none;">
+                {% include 'dish/commentForm.html' with form=comments_form %}
+            </div><!-- end #newRating -->
 
-            <h4>Comments</h4>
+
             <div id="usersComments">
 
                 {% for comment in dish.dish_comments.all %}

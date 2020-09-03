@@ -1,24 +1,30 @@
-.post {
-    border: inset;
-    border-radius: 15px;
-    border-color: skyblue;
+#header h4{
+    display: inline-block;
+    margin-left: 35%;
 }
 
-#title h4 {
-    margin-left: 20%;
-    padding: 1% 15%;
+.post {
+    border: 1px gray solid;
+    border-radius: 10px;
+    margin: 10px 0px;
+    
 }
-#header {
-    display: block;
+.row {
+    padding: 15px;
 }
-#header h4 {
-    display: flex;
-    margin-left: 20%;
-    padding: 1% 15%;
+#dishTitle {
+    margin-left: 28%;
 }
 span {
-    font-family: 'Roboto','Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-style: bold;
     font-weight: bold;
-    color:#007bff;
+    color: #007bff;
+}
+#picture img {
+    max-width: 100%;
+    max-height: 250px;
+}
+#description p{
+    font-size: 14pt;
 }

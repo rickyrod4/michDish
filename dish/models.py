@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 # from django.utils import timezone
 from datetime import datetime, date
 from django.db.models import Avg
+import math
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -57,7 +58,9 @@ class Dish(models.Model):
         return self.title
 
     def get_average_rating(self):
-        self.ratings.aggregate(Avg('rating'))
+        average = self.ratings.aggregate(Avg('rating'))['rating__avg'] or 0
+        return math.ceil(average)
+        #return Rating.objects.filter(dish=dish).aggregate(Avg('rating'))['rating__avg'] or 0
 
 class DishForm(ModelForm):
     class Meta:

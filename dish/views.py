@@ -21,7 +21,6 @@ def index(request):
     # page_obj = paginator.get_page(page_number)
 
     context = {
-        'foo': 'bar',
         'user': request.user,
         'dishes': dishes,
     #     'page_obj': page_obj,
@@ -122,7 +121,7 @@ def rate_dish(request, dish_id):
         'ratings_form': form,
     }
    
-    return render(request, 'dish/ratingForm.html', context)
+    return render(request, 'dish/ratings-info.html', context)
 
 @login_required
 def comment_dish(request, dish_id):
@@ -134,7 +133,7 @@ def comment_dish(request, dish_id):
     # print(f'Processing rating of dish {dish.title} by {user.full_name()}')
     if request.method == 'POST':
 
-        comment = Comment(user=user, dish=dish)
+        comment = Comment(poster=user, dish=dish)
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save()
@@ -154,11 +153,11 @@ def comment_dish(request, dish_id):
     context = {
         'user': user,
         'dish': dish,
-        'all_comments': all_ratings,
+        'all_comments': all_comments,
         'comments_form': form,
     }
    
-    return render(request, 'dish/commentForm.html', context)
+    return render(request, 'dish/comments-info.html', context)
 
 @login_required
 def update_dish(request, dish_id):
@@ -245,6 +244,8 @@ def dish_details(request, dish_id):
         'user_has_rated_dish': user_has_rated_dish,
         'user_rating_this_dish': user_rating_this_dish,
         'form': form,
+        'comments_form': CommentForm(),
+        'all_comments' : dish.dish_comments.all(),
     }
     return render(request, 'dish/dish-details.html', context)
 
@@ -372,7 +373,7 @@ def category_dishes(request, category_id):
     context = {
         'user': user,
         'category' : category,
-        'dishes': Dish.objects.filter(categories__in=[category_id]).order_by('ratings__rating') #category.dishes.all().order_by('rating__rating'),
+        'dishes': Dish.objects.filter(categories__in=[category_id]) #.order_by('ratings__rating').distinct() #category.dishes.all().order_by('rating__rating'),
     }
     return render(request, 'dish/category_dishes.html', context)
 
@@ -398,7 +399,7 @@ def search_dishes(request):
         # 'current_page': page_number,
         'search_query': query,
     }
-    return render(request, 'dish/dishes.html', context)
+    return render(request, 'dish/searchResults.html', context)
 
 def made_it(request, dish_id):
         pass   

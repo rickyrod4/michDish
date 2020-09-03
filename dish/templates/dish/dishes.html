@@ -1,42 +1,33 @@
 <div class="row" id="newPost">
     <div class="title">
-        <h4><a href="/dish/new" class="btn btn-outline-primary">Create New Recipe</a></h4>
+      <a href="/dish/new" class="btn btn-info"><small><i class="fas fa-plus-circle"></i> Create New Recipe</small></a> 
     </div>
-</div>
 
-<div id="allPost">
-    <div id="title">
-        <h4>Dishes</h4>
-    </div>
+
+  </div>
+  <div id="allPost">
     <!-- All Users Post [For Loop Starts] -->
     {% for dish in dishes %}
-    <div class="row post">
-        <div>
-            <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a
-                    href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }}
-                    {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
+    <div class="post">
+      <div id="dishTitle" class="row">
+        <h5><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h5> <!-- Take To Recipe Page -->
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <div id="picture">
+            <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
+          </div>
         </div>
-        <div id="picture">
-            <div>
-                <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
-            </div>
-            <div>
-                <h5>Overall Rating: {{ dish.ratings.avg }} </h5>
-            </div>
-            <div>
-                <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
-            </div>
+        <div id="description" class="col-8">
+          <p><span>Description:</span>  {{ dish.description }}</p>
+          
+          <div>
+            <p><span data-rating="{{ dish.get_average_rating }}"></span> <small>{{ dish.ratings.count }} Ratings</small></p>
+          </div>
+          
         </div>
-        <div id="description">
-            <p>{{ dish.description }}</p>
-            <div id="rate">
-                <a href="">Rate: </a> <!-- ****Change to Django Form Radio 1-5 -->
-                <!-- Display Form for Users To Type Comments-->
-                <a href="">Review</a>
-                <!--****Django Form To input Review-->
-            </div>
-        </div>
+      </div>
     </div>
     <!-- End For Loop -->
     {% endfor %}
-</div>
+  </div>

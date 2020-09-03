@@ -3,19 +3,27 @@
 }
 
 .dishes {
-    width: 250px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}
+#dishes {
     display: flex;
     flex-wrap: wrap;
 }
 
 .dish {
-    width: 200px;
+    width: 300px;
     padding: 10px;
     margin: 10px;
     border: 1px solid #009EC3;
     border-radius: 5px;
     color: #009EC3
+}
+.rating .dish {
+    width: 80%;
 }
 
 .dish > a {
@@ -28,35 +36,15 @@
 .dish img {
     width: 100%;
 }
+.rating .dish img {
+    max-width: 90%;
+    max-height: 180px;
+}
 
 #profilePic img {
     max-width: 100%;
     max-height: 200px;
 }
-#profilePic {
-    border: black 3px solid;
-    border-radius: 10px;
-}
-#userInfo {
-    border: black 3px solid;
-    border-radius: 10px;
-}
-#header {
-    width: 66%;
-    display: flex;
-    margin-left: 20%;
-    padding: 1% 15%;
-}
-.dishes {
-    border: 3px solid black;
-    border-radius: 10px;
-}
-
-#profilePic {
-    border: black 3px solid;
-    border-radius: 10px;
-}
-
 
 .bio {
     white-space: pre-line;

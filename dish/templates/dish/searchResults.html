@@ -6,8 +6,6 @@
 
 {% block greeting %}{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}{% endblock greeting %}
 
-{% block favorites %}
-{% endblock favorites %}
 
 {% block profile %}
 {% if user.is_authenticated %}
