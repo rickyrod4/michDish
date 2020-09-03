@@ -1,35 +1,24 @@
-
-#picture img{
-    width: 100%;
-    padding: 10px;
-}
-.col-3{
-    border: solid black 2px;
-    border-radius: 10px;
+* {
+    box-sizing: border-box;
 }
 
-#category {
-    margin-top: 20px;
+.dish-poster {
+    font-style: italic;
 }
-.col-7{
-    border: solid black 2px;
-    border-radius: 10px;
-    padding: 10px;
 
+.dish-image img {
+    max-width: 100%;
+    max-height: 300px;
 }
-.col-2{
-    border: solid black 2px;
-    border-radius: 10px;
-    padding: 10px;
 
+/*
+.recipe-details div {
+    white-space: pre-line;
 }
-.col-2 div {
-    margin-top: 10px;
-}
-span {
-    color: #007bff;
-}
-#userReviews {
-    border-bottom: solid 2px black;
-    border-style: inherit;
+*/
+.dish-meta, #categories {
+    padding: 20px 10px 10px 10px;
+    margin: 0 0 20px 0;
+    border: 1px solid #009ec3;
+    border-radius: 8px;
 }

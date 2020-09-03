@@ -57,7 +57,18 @@ body {
     border: 1px solid lightgray;
 }
 
+.fa-star {
+    color: gold;
+}
 
-#recipe div {
-    white-space: pre-line;
+.stars-large {
+    font-size: 14pt;
+}
+
+.stars-medium {
+    font-size: 10pt;
+}
+
+.stars-small {
+    font-size: 8pt;
 }

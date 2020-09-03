@@ -14,6 +14,25 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function getRatingStars(ratingValue, size){
+    var starMarkup = '<i class="fas fa-star"></i>',
+        rating,
+        htmlString = '';
+
+    if (ratingValue && ratingValue != "0"){
+        htmlString = '<span class="stars stars-' + (size ? size : 'none') + '" title="' + ratingValue + ' stars">';
+        rating = Math.ceil(ratingValue);
+        for(var i = 1; i <= rating; i++){
+            htmlString += starMarkup;
+        }
+        htmlString += ratingValue + '</span>';
+    } else {
+        htmlString += '<small class="text-muted">Be the first to rate this item!</small>';
+    }
+
+    return htmlString;
+}
+
 function rateDish(dishId){
     console.log('about to rate dish via ajax.');
     $.ajax({
@@ -59,3 +78,10 @@ $('.search-form').submit(function(e){
         console.log(error);
     });
 });
+
+$('[data-rating]').html(function(index,oldHTML){
+    var rating = $(this).attr('data-rating');
+    var size = $(this).attr('data-rating-size') || null;
+    return getRatingStars(rating, size);
+})
+

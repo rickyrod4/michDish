@@ -10,14 +10,15 @@
 
 {% block favorites %}
 {% if user.is_authenticated %}
-  <a href="{% url 'dish:favorite_dishes' %}" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
-  {% else %}
-  {% endif %}
+<a href="{% url 'dish:favorite_dishes' %}" class="nav-link"><i class="fas fa-bookmark"></i>Favorites</a>
+{% else %}
+{% endif %}
 {% endblock favorites %}
 
 {% block profile %}
 {% if user.is_authenticated %}
-<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i class="fas fa-user-cog"></i>Profile</a>
+<a href="{% url 'accounts:user_profile' profiled_user_id=user.id %}" class="nav-link"><i
+        class="fas fa-user-cog"></i>Profile</a>
 {% else %}
 <a href="{% url 'accounts:signup' %}" class="nav-link"><i class="fas fa-user-cog"></i>Register</a>
 {% endif %}
@@ -25,122 +26,142 @@
 
 {% block login %}
 {% if user.is_authenticated %}
-  <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
-  {% else %}
-  <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
-  {% endif %}
+<a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+{% else %}
+<a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+{% endif %}
 {% endblock login %}
 
 {% block content %}
-<div id="main-content" data-id="{{ dish.id }}">
-        <div class="row" id="newPost">
-            <div class="title">
-                <div class="d-inline-flex align-items-baseline">
-                    <h2>{{ dish.title }}</h2>
-                    {% if dish.poster.id == user.id %}
-                    <p class="edit-category ml-2" title="Edit" style="color:#009EC3">
-                        <a href="{% url 'dish:update_dish' dish_id=dish.id %}">
-                            <small><i class="fas fa-pen"></i> Edit</small>
-                        </a>
-                    </p>
-                    {% endif %}
-                </div>
+<div class="container" data-id="{{ dish.id }}">
+    <div class="dish-header d-flex flex-column align-items-center">
 
-                <!--Inser User Profile link-->
-                <h2>Chef: <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }} {{ dish.poster.last_name }}</a></h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-3">
-                <div id="picture">
-                    <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
+        <div class="dish-title d-inline-flex align-items-baseline">
+            <h1 class="my-0">{{ dish.title }}</h1>
+            {% if dish.poster.id == user.id %}
+            <p class="edit-category ml-2 my-0" title="Edit" style="color:#009EC3">
+                <a href="{% url 'dish:update_dish' dish_id=dish.id %}">
+                    <small><i class="fas fa-pen"></i> Edit</small>
+                </a>
+            </p>
+            {% endif %}
+        </div><!-- end .dish-title -->
+
+        <p class="dish-poster my-0">
+            by Chef 
+            <a href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">
+                {{ dish.poster.first_name }} {{ dish.poster.last_name }}
+            </a>
+        </p>
+    </div><!-- end .dish-header-->
+
+    <div class="row">
+
+        <div class="col-8">
+            <div class="description">
+                <div>{{ dish.description|linebreaks }}</div>
+            </div><!-- end .description -->
+    
+            <div class="dish-image">
+                <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
+            </div><!-- end .dish-image -->
+        </div><!-- end .col-8 -->
+    
+        <div class="col-4">
+
+            <div class="dish-meta">
+                <h4>Recipe Information</h4>
+                <div class="cookTime">
+                    <span class="label text-muted">Cook Time: </span>{{ dish.cook_time }} Minutes
                 </div>
-                <div id="category">
-                    <!--Insert link tag to be able to take to similar category pages-->
-                    <h4>Categories</h4>
-                    <ul class="categories">
+                <div class="prepTime">
+                    <span class="label text-muted">Prep Time: </span>{{ dish.prep_time }} Minutes
+                </div>
+                <div class="totalTime">
+                    <span class="label text-muted">Total Time: </span>{{ total_time }} Minutes
+                </div>
+                <div class="serving">
+                    <span class="label text-muted">Servings: </span>{{ dish.servings }}
+                </div>
+            </div><!-- end .dish-meta -->
+
+            <div id="categories">
+                <!--Insert link tag to be able to take to similar category pages-->
+                <h4>Categories</h4>
+                <ul class="categories">
                     {% for category in dish.categories.all %}
-                        <li class="category" data-id="{{ category.id }}"> <a href="/category/{{ category.id }}">{{ category.name }}</a></li>
+                    <li class="category" data-id="{{ category.id }}">{{ category.name }}</li>
                     {% endfor %}
-                    </ul> 
-                </div>
+                </ul>
+            </div><!-- end #categories-->
+        </div><!-- end .col-4 -->
+    </div><!-- end .row -->
+
+    <div class="row">
+    </div>
+
+    <div class="row">
+        <div class="recipe-details col">
+            <div id="ingredients">
+                <h4>Ingredients: </h4>
+                <div>{{ dish.ingredients|linebreaks }}</div>
+            </div>
+            <div id="recipeWriting">
+                <h4>Recipe Instructions: </h4>
+                <div>{{ dish.recipe|linebreaks }}</div>
+            </div>
+        </div> <!-- end .recipe-details.col-->
+    </div> <!-- end row -->
+
+    <div class="row">
+        <div class="ratings-info col-8">
+            <div class="d-inline-flex justify-content-start align-items-center">
+                <h4 class="my-0">Dish Average Rating: <span class="rating-number" data-rating="{{average_rating}}" data-rating-size="medium"></span></h4>
+                <div class="btn btn-info ml-3"><small><i class="fas fa-plus-circle"></i> New Rating</small></div>
             </div>
 
+            <div id="newRating" style="display: none;">
+                {% include 'dish/ratingForm.html' %}
+            </div><!-- end #newRating -->
 
-            <div class="col-7">
-                <div id="recipe">
-                    <div id="description">
-                        <p><h4><span>Description: </span></h4> {{ dish.description }}</p>
-                    </div>
-                    <div id="ingredients">
-                        <p><h4><span>Ingredients: </span></h4>{{ dish.ingredients }}</p>
-                    </div>
-                    <div id="recipeWriting">
-                        <p><h4><span>Recipe Instructions: </span></h4>{{ dish.recipe }}</p>
-                    </div>
-                </div>
-                <div id="ratings">
-                    <div class="btn btn-info"><!--Javascript here to display the newRating Div-->
-                        Rate
-                    </div>
-                    <div id="newRating" style="display: none;">
-                            {% include 'dish/ratingForm.html' %}<!-- ***Django Form Radio edition -->
-                    </div>
-                    <div id="newComment">
-                        <!-- ****add comment here hidden -->
-                    </div>
-                </div>
-            </div>
+            <div class="ratings">
+                {% for rating in all_ratings %}
+                <div class="rating">
+                    {% include 'dish/stars.html' with size="small" %}
+                    <h6>
+                        <a href="{% url 'accounts:user_profile' profiled_user_id=rating.user.id %}">
+                            {{ rating.user.first_name }} {{ rating.user.last_name }}
+                        </a>
+                    </h6>
+                    <p>{{ rating.review }}</p>
+                    <p>{{ rating.created_at }}</p>
+                </div><!-- end .rating -->
+                {% endfor %}
+            </div><!-- end .ratings -->
+        </div><!-- end .ratings-info -->
 
+        <div class="comments col-4">
+            <div id="newComment">
+                <!-- ****add comment here hidden -->
+            </div><!-- end #newComment -->
 
-            <div class="col-2">
-                <div id="times">
-                    <div id="cookTime">
-                        <h6><span>Cook Time:</span> {{ dish.cook_time }} Min</h6>
-                    </div>
-                    <div id="prepTime">
-                        <h6><span>Prep Time:</span> {{ dish.prep_time }} Min</h6>
-                    </div>
-                    <div id="totalTime">
-                        <h6><span>Total Time:</span> {{ total_time }} Min</h6>
-                    </div>
-                    <div id="serving">
-                        <h6><span>Serving:</span> {{ dish.servings }}</h6>
-                    </div>
-                </div>
-                <br><br><br>
-                <div id="ratings">
-                    <div id="avgRating">
-                        <h6><span>Dish Avg Rating:</span> {{ average_rating }}</h6>
-                    </div>
+            <h4>Comments</h4>
+            <div id="usersComments">
 
-                    <h6><span>Ratings</span></h6>
-                    <div id="reviews">
-                        {% for rating in all_ratings %}
-                        <div id="userReviews">
-                            <div id="userName">
-                                <!--****User Link-->
-                                <h6><a href="{% url 'accounts:user_profile' profiled_user_id=rating.user.id %}">{{ rating.user.first_name }} {{ rating.user.last_name }}</a></h6>
-                            </div>
-                            <div id="review">
-                                <p>{{ rating.review }} - {{ rating.created_at }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                {% for comment in dish.dish_comments.all %}
+                <h6>
+                    <a href="{% url 'accounts:user_profile' profiled_user_id=comment.poster.id %}">
+                        {{ comment.poster.first_name }} {{ comment.poster.last_name }}
+                    </a>
+                </h6>
+                <p>{{ comment.comment }}</p>
+                <p>{{ comment.created_at }}</p>
+                {% endfor %}
 
-                <h6><span>Comments</span></h6>
-                <div id="usersComments">
-                    <!--****Check for Comments-->
-                    {% for comment in dish.dish_comments.all %}
-                    <h6><a href="{% url 'accounts:user_profile' profiled_user_id=comment.poster.id %}">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a></h6>
-                    <p>{{ comment.comment }} - {{ comment.created_at }}</p>
-                    {% endfor %}
-                </div>
+            </div><!-- end #usersComments -->
+        </div><!-- end .Comments -->
 
-            </div>
-        </div>
-</div>        
+    </div> <!-- end row comments & ratings -->
+</div>
 
 {% endblock %}

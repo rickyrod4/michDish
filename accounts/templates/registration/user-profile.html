@@ -72,19 +72,18 @@
             <div id="dishes">
             <!--Dispaly All User Post-->
             {% for dish in profiled_user.user_dishes.all %}
-                <div class="dish row" id="{{ dish.name }}" data-id="{{ dish.id }}">
-                    <a href="/dish/{{ dish.id }}">
-                        <img src="{{ dish.profile_pic.url }}" alt="Picture of category {{ dish.name }}">
-                        <h5>{{ dish.title }}</h5>
-                        {% if dish.poster.id == user.id %}
-                        <p class="edit-dish" title="Edit" style="color:#009EC3">
-                            <a href="{% url 'dish:update_dish' dish_id=dish.id %}">
-                                <small><i class="fas fa-pen"></i> Edit</small>
-                            </a>
-                        </p>
-                        {% endif %}
-                    </a>
-                </div>
+            <div class="dish" id="{{ dish.name }}" data-id="{{ dish.id }}">
+                <a href="/dish/{{ dish.id }}">
+                    <img src="{{ dish.profile_pic.url }}" alt="Picture of category {{ dish.name }}">
+                    <h5>{{ dish.title }}</h5>
+                    {% if dish.poster.id == user.id %}
+                    <p class="edit-dish" title="Edit" style="color:#009EC3">
+                        <a href="{% url 'dish:update_dish' dish_id=dish.id %}">
+                            <small><i class="fas fa-pen"></i> Edit</small>
+                        </a>
+                    </p>
+                    {% endif %}
+                </a>
             </div>
 
             {% endfor %}
