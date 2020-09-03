@@ -1,7 +1,7 @@
 {% extends 'dish/base.html' %}
 {% load static %}
 {% block css %}
-<link rel="stylesheet" href="{% static 'dish/css/categories.css' %}">
+<link rel="stylesheet" href="{% static 'dish/css/favorites.css' %}">
 {% endblock css %}
 
 {% block greeting %}{% if user.is_authenticated %} {{ user.first_name }}{% else %}{% endif %}{% endblock greeting %}
@@ -30,40 +30,7 @@
 {% endif %}
 {% endblock login %}
 
-{% block content %}
-<div class="container">
-  <!--in category.dishes.all()-->
-  {% for dish in dishes %}
-  <div class="row post">
-    <div>
-      <h6><a href="/dish/{{ dish.id }}">{{ dish.title }}</a> By: <a
-          href="{% url 'accounts:user_profile' profiled_user_id=dish.poster.id %}">{{ dish.poster.first_name }}
-          {{ dish.poster.last_name }}</a></h6> <!-- Take To Recipe Page -->
-    </div>
-    <div id="picture">
-      <div>
-        <img src="{{ dish.profile_pic.url }}" alt="Dish Picture Here">
-      </div>
-      <div>
-        <h5>Overall Rating: {{ dish.ratings.avg }} </h5>
-      </div>
-      <div>
-        <h5>Total Number of Ratings:{{ dish.ratings.count }}</h5>
-      </div>
-    </div>
-    <div id="description">
-      <p>{{ dish.description }}</p>
-      <div id="rate">
-        <a href="">Rate: </a> <!-- ****Change to Django Form Radio 1-5 -->
-        <!-- Display Form for Users To Type Comments-->
-        <a href="">Review</a>
-        <!--****Django Form To input Review-->
-      </div>
-    </div>
-  </div>
-  <!-- End For Loop -->
-  {% endfor %}
-</div>
 
-
-{% endblock %}
+{% block content %} 
+{% include 'dish/dishes.html' %}
+{% endblock%}

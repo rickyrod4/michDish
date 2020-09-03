@@ -1,0 +1,22 @@
+<div class="d-inline-flex justify-content-start align-items-center">
+    <h4>Comments</h4>
+    <div class="btn btn-info ml-3 newComment"><small><i class="fas fa-plus-circle"></i> New Comment</small></div>
+</div>
+<div id="newComment" style="display: none;">
+    {%  include 'dish/commentForm.html' with form=comments_form  %}
+</div><!-- end #newRating -->
+
+
+<div id="usersComments">
+
+    {% for comment in dish.dish_comments.all %}
+    <h6>
+        <a href="{% url 'accounts:user_profile' profiled_user_id=comment.poster.id %}">
+            {{ comment.poster.first_name }} {{ comment.poster.last_name }}
+        </a>
+    </h6>
+    <p>{{ comment.comment }}</p>
+    <p>{{ comment.created_at }}</p>
+    {% endfor %}
+
+</div><!-- end #usersComments -->

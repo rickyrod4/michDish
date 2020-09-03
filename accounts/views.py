@@ -28,10 +28,15 @@ def user_profile(request,profiled_user_id):
     profiled_user = User.objects.get(id=profiled_user_id)
     location = profiled_user.profile.location or ''
 
+    average_rating = Rating.objects.filter(user=profiled_user).aggregate(Avg('rating'))['rating__avg'] or 0
+    all_ratings = profiled_user.ratings.all()
+
     context = {
         'user': request.user,
         'profiled_user': profiled_user,
         'location': location,
+        'user_average_rating' : average_rating,
+        'all_ratings' : all_ratings,
     }
     return render(request, 'registration/user-profile.html', context)
 
