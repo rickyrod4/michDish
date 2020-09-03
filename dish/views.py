@@ -205,8 +205,14 @@ def dish_details(request, dish_id):
 
     if hasattr(dish,'ratings'):
 
+        if user.is_authenticated == False:
+            # user has not yet rated this dish
+            user_has_rated_dish = False
+            user_rating_this_dish = None
+            form = RatingForm()
+
         # determine if this user has rated this dish before
-        if dish.ratings.filter(user=user).count() > 0:
+        elif dish.ratings.filter(user=user).count() > 0:
             #user hsa rated dish; don't permit another rating (just don't return a form object)
             print(f"Ratings for {dish.title}: {dish.ratings.filter(user=user).count()}")
             user_has_rated_dish = True
