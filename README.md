@@ -9,7 +9,8 @@ A fun resourceful web application to help you post your amazing recipes and have
 Click on the register button 
 
 Type in the requested information
-
+![Getting Started](./images/DashboardView.png)
+![Getting Started](images/RegistrationView.png)
 
 # Browse
 You will see the most recent post by other users on the dashboard
